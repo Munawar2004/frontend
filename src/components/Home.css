@@ -1,0 +1,199 @@
+/* ✅ Hero Section Fix */
+.hero-section {
+  position: relative;
+  height: 400px;
+  background: url("aa.jpg") no-repeat center center/cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+}
+.hero-section .overlay {
+  background: rgba(2, 188, 92, 0);
+  padding: 40px;
+  border-radius: 10px;
+  max-width: 70%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-section h1 {
+  font-size: 3rem;  /* Bigger text */
+  font-weight: bold;
+  line-height: 1.4;
+  margin-bottom: 15px;
+  padding: 10px;
+}
+
+.hero-section p {
+  font-size: 1.4rem;
+  margin-top: 10px;
+  opacity: 0.9;
+}
+
+.hero-search {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.hero-search input {
+  padding: 10px;
+  width: 300px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+.hero-search button {
+  padding: 10px 20px;
+  background: orange;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.hero-search button:hover {
+  background: darkorange;
+}
+
+/* ✅ Restaurants List Grid */
+
+/* ✅ Restaurants Container - Grid Layout */
+.restaurants-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Fixed 3 columns */
+  gap: 20px;
+  padding: 40px;
+  max-width: 1200px; /* Adjusted max-width for 3 columns */
+  margin: 0 auto; /* Center the grid */
+}
+
+/* ✅ Restaurant Card Styling */
+.restaurant-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+  width: 100%; /* Ensure card takes full width of its grid cell */
+  max-width: 350px; /* Increased max-width for better spacing */
+  margin: 0 auto; /* Center the card in its grid cell */
+}
+
+.restaurant-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.2);
+}
+
+/* ✅ Restaurant Image */
+.restaurant-image img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+/* ✅ Restaurant Info */
+.restaurant-info {
+  padding: 15px;
+  text-align: center;
+}
+
+.restaurant-info h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.food-type {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+/* ✅ View Menu Button */
+.view-menu-button {
+  background: #ff6600;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+  position: relative;
+  z-index: 1;
+}
+
+.view-menu-button:hover {
+  background: #e65c00;
+}
+
+/* Home.css */
+.search-results-container {
+  padding: 20px;
+}
+
+.search-results-container h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+.search-results-container h3 {
+  margin-top: 20px;
+  font-size: 20px;
+  color: #555;
+}
+
+.dish-card {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.dish-image img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 15px;
+}
+
+.dish-info {
+  flex: 1;
+}
+
+.dish-info h4 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.dish-info p {
+  margin: 5px 0;
+  color: #666;
+}
+
+/* Make the grid responsive */
+@media (max-width: 1000px) {
+  .restaurants-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .restaurants-container {
+    grid-template-columns: 1fr;
+  }
+}
+

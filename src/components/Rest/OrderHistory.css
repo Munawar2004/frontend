@@ -1,0 +1,34 @@
+.order-history {
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.history-list {
+  list-style: none;
+  padding: 0;
+}
+
+.history-item {
+  border: 1px solid #e2e8f0;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.history-item p {
+  margin: 5px 0;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}
+
+.loading-spinner {
+  text-align: center;
+  font-size: 18px;
+  color: gray;
+}

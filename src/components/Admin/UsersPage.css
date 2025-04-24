@@ -1,0 +1,98 @@
+/* Users Page Styles */
+.users-container {
+  background: white;
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.users-table th,
+.users-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--gray-light);
+}
+
+.users-table th {
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+}
+
+.users-table td {
+  color: var(--dark);
+}
+
+.users-table tr:hover {
+  background-color: var(--gray-light);
+}
+
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.pagination button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  margin: 0 0.25rem;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.pagination button:hover {
+  background-color: var(--primary-dark);
+}
+
+.pagination button:disabled {
+  background-color: var(--gray);
+  cursor: not-allowed;
+}
+
+.pagination span {
+  margin: 0 0.75rem;
+  font-weight: 500;
+  color: var(--dark);
+}
+/* User Card */
+.user-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Delete Button */
+.delete-btn {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.delete-btn:hover {
+  background-color: #cc0000;
+}
