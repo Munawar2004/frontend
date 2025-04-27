@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FiHome, FiCoffee, FiUsers, FiGrid, FiPercent } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import { FiHome, FiCoffee, FiUsers, FiGrid, FiPercent, FiLogOut } from "react-icons/fi";
 import PendingRestaurants from "./PendingRestaurants";
 import VerifiedRestaurants from "./VerifiedRestaurants";
 import UsersPage from "./UsersPage";
@@ -9,6 +10,12 @@ import "./AdminPanel.css";
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
 
   return (
     <div className="admin-container">
@@ -16,6 +23,7 @@ const AdminPanel = () => {
         <div className="sidebar-header">
           <h2>Admin Panel</h2>
         </div>
+
         <nav className="sidebar-nav">
           <ul>
             <li className={activeTab === "dashboard" ? "active" : ""} onClick={() => setActiveTab("dashboard")}>
@@ -40,7 +48,16 @@ const AdminPanel = () => {
             </li>
           </ul>
         </nav>
+
+        {/* Logout Option */}
+        <div className="logout-section">
+  <div className="logout-box" onClick={handleLogout}>
+    <FiLogOut className="logout-icon" />
+    <span>Logout</span>
+  </div>
+</div>
       </div>
+
       <div className="admin-main">
         {activeTab === "dashboard" && <PendingRestaurants />}
         {activeTab === "restaurants" && <VerifiedRestaurants />}

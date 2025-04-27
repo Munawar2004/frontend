@@ -69,30 +69,30 @@ const CategoryPage = () => {
       setLoading(true);
       const token = localStorage.getItem('token');
       
-      const categoryData = {
-        name: category.name
-      };
-
+      const formData = new FormData();
+      formData.append('name', category.name);
+      if (category.imageUrl instanceof File) {
+        formData.append('Photo', category.imageUrl); // Make sure your backend expects 'image'
+      }
+  
       const url = id 
         ? `http://localhost:5191/api/categories/${id}`
         : 'http://localhost:5191/api/categories';
-      
+  
       const method = id ? 'put' : 'post';
-      
-      const response = await axios[method](url, categoryData, {
+  
+      const response = await axios({
+        method,
+        url,
+        data: formData,
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
+          'Content-Type': 'multipart/form-data'
         }
       });
-      
-      
+  
       if (response.data && response.data.success) {
-        
         alert('Category saved successfully!');
-        setTimeout(() => {
-          navigate('/admin/categories');
-        }, 1000);
       } else {
         setError('Failed to save category');
       }
@@ -103,6 +103,7 @@ const CategoryPage = () => {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="category-form-container">

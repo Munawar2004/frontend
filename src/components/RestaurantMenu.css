@@ -188,20 +188,21 @@
 .add-button {
   position: absolute;
   bottom: 0px;
-  right: 55px;
-  background-color: #ff6600;
-  color: #ff6600;
+  right: 50px;
+  width: 100px;
+  background-color: #ff4d4d;
+  color: white;
+  border-radius: 8px;
   border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 14px;
+  padding: 8px;
+  cursor: pointer;
   font-weight: 500;
   cursor: pointer;
   z-index: 2;
 }
 
 .add-button:hover {
-  background-color: #ff6600;
+  background-color: #e6620b;
 }
 
 
@@ -340,9 +341,32 @@
   color: white;
   border: none;
   padding: 16px;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
 }
+
+.btn {
+  width: 100px;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.cancel-btn {
+  width: 100px;
+    border:2px ,solid ,red;
+  color: red;
+  border-radius: 10px;
+  padding: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+
+
 
 .checkout-button:hover {
   background-color: #ff3333;
@@ -523,6 +547,7 @@
 .variant-popup-actions .confirm-button {
   background: #ff6b6b;
   color: white;
+  
 }
 
 .variant-popup-actions .confirm-button:disabled {
@@ -535,4 +560,232 @@
   font-size: 0.8rem;
   color: #666;
   margin-top: 4px;
+}
+
+
+
+
+
+.cart-quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  background: white;
+  padding: 4px;
+  border: 1px solid #ddd;
+  margin-top: 20px;
+}
+
+.cart-quantity-controls button {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #333;
+}
+
+.cart-quantity-controls button:hover {
+  background-color: #e0e0e0;
+}
+
+
+
+
+
+
+
+/* varitent popup */
+
+
+.customization-popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.customization-popup {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.3s ease;
+}
+
+.customization-popup h3 {
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.customization-popup p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 16px;
+}
+.variant-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.variant-option {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    color: #444;
+}
+
+.heading-of-popup{
+  color:orange;
+}
+
+.variant-option:hover {
+    border-color: #aaa;
+}
+
+.variant-option.selected {
+    border-color: #ff7b00;
+    background-color: #fffde7;
+    color: #ff7b00;
+    font-weight: bold;
+}
+
+.popup-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.cancel-btn,
+.confirm-btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.cancel-btn {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.cancel-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.confirm-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.confirm-btn:hover {
+    background-color: #005ecb;
+}
+
+.confirm-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+
+
+
+
+
+/* couponsection */
+.coupon-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.coupon-section input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 2px solid #ffa726;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.coupon-section input:focus {
+    border-color: #fb8c00;
+}
+
+.coupon-section button {
+    background-color: #fd6161;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.coupon-section button:hover {
+    background-color: rgb(251, 59, 0);
+}
+
+/* Payment Method Styling */
+.payment-method {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #444;
+}
+
+.payment-method label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+/* Cart Total */
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    background-color: #fff3e0;
+    border: 1px solid #ffd180;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 16px;
+    color: #e65100;
 }

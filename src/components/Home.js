@@ -8,6 +8,8 @@ const Home = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [categories, setCategories] = useState([]); 
+  const [categoryLoading, setCategoryLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState({ restaurants: [], dishes: [] });
   const navigate = useNavigate();
@@ -31,11 +33,20 @@ const Home = () => {
         console.log("Verified Restaurants:", verifiedRestaurants);
   
         setRestaurants(verifiedRestaurants);
+        console.log("Fetching categories...");
+        const categoriesResponse = await axios.get("http://localhost:5191/api/categories");
+        //  // Replace with your actual API endpoint
+        console.log("Categories API Response:", categoriesResponse);
+        console.log("Categories Data:", categoriesResponse.data);
+        setCategories(categoriesResponse.data.data); 
+
+
       } catch (err) {
         console.error("Error fetching restaurants:", err);
         setError("Failed to fetch restaurants");
       } finally {
         setLoading(false);
+        setCategoryLoading(false);
       }
     };
   
@@ -59,13 +70,30 @@ const Home = () => {
 
     try {
       console.log("Searching for:", query);
-      const response = await axios.get(`http://localhost:5191/api/search?query=${query}`);
+      const response = await axios.get("http://localhost:5191/api/search");
       console.log("Search API Response:", response.data);
       setSearchResults(response.data);
     } catch (error) {
       console.error("Search failed:", error);
     }
   };
+
+  const handleCategoryClick = async (categoryid) => {
+    try {
+      console.log("Category clicked:", categoryid);
+  
+      // Hitting the API to fetch restaurants by category (correct URL usage)
+      const response = await axios.get(`http://localhost:5191/api/restaurants/category/${categoryid}`);
+      console.log("Category-specific data:", response.data.data);
+  
+      // Navigate to the CategoryPage, passing category data
+      navigate(`/category/${categoryid}`, { state: { categoryData: response.data.data } });
+  
+    } catch (error) {
+      console.error("Error fetching category data:", error);
+    }
+  };
+  
 
   const handleSearchSubmit = (e) => {
     e.preventDefault(); 
@@ -74,6 +102,7 @@ const Home = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
+
 
   return (
     <div>
@@ -96,6 +125,41 @@ const Home = () => {
             <button type="submit">Search</button>
           </form>
         </div>
+      </div>
+
+{/* Categories Section */}
+<div className="categories-section">
+        
+        {categoryLoading ? (
+          <p>Loading categories...</p>
+        ) : (
+          <div className="categories-container">
+            {categories.length > 0 ? (
+              categories.map((category) => (
+                <div key={category.id} className="category-card">
+                 <div className="category-image">
+                 <img
+                      src={
+                        category.photo
+                          ? `http://localhost:5191/uploads/${category.photo}`
+                          : `https://ui-avatars.com/api/?name=${encodeURIComponent(category.name)}&background=random&rounded=true`
+                      }
+                      alt={category.name}
+                      onClick={() => handleCategoryClick(category.id)}
+                      onError={(e) => {
+                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(category.name)}&background=random&rounded=true`;
+                      }}
+                      style={{ cursor: "pointer" }} // add pointer to show it's clickable
+                    />
+                  </div>
+                  <h3>{category.name}</h3>
+                </div>
+              ))
+            ) : (
+              <p>No categories available</p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* ✅ Search Results */}
@@ -160,6 +224,7 @@ const Home = () => {
           </div>
         </div>
       )}
+
 
       {/* ✅ Default Restaurants List */}
       {!searchQuery && (

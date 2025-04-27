@@ -1,12 +1,20 @@
 import React, { useState } from "react";
-import { FiPlusCircle, FiShoppingCart, FiClock } from "react-icons/fi";
-import AddMenu from "./AddMenu"; 
-import Orders from "./Orders"; 
-import OrderHistory from "./OrderHistory"; 
-import "./RestaurantDashboard.css"; 
+import { useNavigate } from "react-router-dom";
+import { FiPlusCircle, FiShoppingCart, FiClock, FiLogOut } from "react-icons/fi";
+import AddMenu from "./AddMenu";
+import Orders from "./Orders";
+import OrderHistory from "./OrderHistory";
+import OrderRequests from "./OrderRequests"; // Import the new component
+import "./RestaurantDashboard.css";
 
 const RestaurantDashboard = () => {
   const [activeTab, setActiveTab] = useState("addMenu");
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
 
   return (
     <div className="restaurant-dashboard">
@@ -23,6 +31,13 @@ const RestaurantDashboard = () => {
             >
               <FiPlusCircle className="nav-icon" />
               <span>Add Menu</span>
+            </li>
+            <li
+              className={activeTab === "orderRequests" ? "active" : ""}
+              onClick={() => setActiveTab("orderRequests")}
+            >
+              <FiClock className="nav-icon" />
+              <span>Order Requests</span>
             </li>
             <li
               className={activeTab === "orders" ? "active" : ""}
@@ -42,9 +57,18 @@ const RestaurantDashboard = () => {
         </nav>
       </div>
 
+      {/* Logout Button */}
+      <div className="logout-section">
+        <div className="logout-box" onClick={handleLogout}>
+          <FiLogOut className="logout-icon" />
+          <span>Logout</span>
+        </div>
+      </div>
+
       {/* Right Content Area */}
       <div className="dashboard-content">
         {activeTab === "addMenu" && <AddMenu />}
+        {activeTab === "orderRequests" && <OrderRequests />} {/* Render Order Requests Component */}
         {activeTab === "orders" && <Orders />}
         {activeTab === "orderHistory" && <OrderHistory />}
       </div>

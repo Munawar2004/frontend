@@ -1,202 +1,34 @@
-.orders {
+.order-history {
+  padding: 20px;
   background: white;
-  padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.orders-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1.5rem;
+.history-list {
+  list-style: none;
+  padding: 0;
 }
 
-.orders-header h2 {
-  margin: 0;
-  flex-grow: 1;
-  text-align: center;
-}
-
-.back-button {
-  background-color: #f3f4f6;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  transition: background-color 0.2s;
-}
-
-.back-button:hover {
-  background-color: #e5e7eb;
-}
-
-.orders table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.orders th, .orders td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.orders button {
-  padding: 0.5rem 1rem;
-  margin-right: 0.5rem;
-  border: none;
-  cursor: pointer;
-}
-
-.orders button:first-child {
-  background-color: #10b981;
-  color: white;
-}
-
-.orders button:last-child {
-  background-color: #ef4444;
-  color: white;
-}
-
-.ready-btn {
-  background-color: #10b981 !important; /* Green color */
-  color: white !important;
-}
-
-.accept-btn {
-  background-color: #10b981; /* Green color */
-  color: white;
-}
-
-.decline-btn {
-  background-color: #ef4444; /* Red color */
-  color: white;
-}
-
-.status-badge {
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.status-badge.shipped {
-  background-color: #10b981;
-  color: white;
-}
-
-.status-badge.declined {
-  background-color: #ef4444;
-  color: white;
-}
-
-.status-badge.pending {
-  background-color: #f59e0b;
-  color: white;
-}
-
-.status-badge.accepted {
-  background-color: #3b82f6;
-  color: white;
-}
-/* Modal Background */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-/* Modal Box */
-.modal-content {
-  background: #fff;
-  padding: 30px;
-  border-radius: 16px;
-  width: 80%;
-  max-width: 800px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  overflow-y: auto;
-  max-height: 90vh;
-}
-
-/* Modal Section Titles */
-.modal-content h3 {
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-/* Grid Layout for 3 Rows */
-.modal-section {
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #ddd;
-}
-
-/* Row Label-Value Structure */
-.modal-section p {
-  margin: 6px 0;
-  font-size: 16px;
-}
-
-/* Items Grid */
-.modal-items-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.modal-item {
-  width: 160px;
+.history-item {
+  border: 1px solid #e2e8f0;
   padding: 10px;
-  border: 1px solid #eee;
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  text-align: center;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.modal-item img {
-  width: 100%;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 8px;
+.history-item p {
+  margin: 5px 0;
 }
 
-/* Action Buttons */
-.modal-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.accept-btn, .decline-btn, .close-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+.error-message {
+  color: red;
   font-weight: bold;
 }
 
-.accept-btn {
-  background-color: #4CAF50;
-  color: white;
-}
-
-.decline-btn {
-  background-color: #f44336;
-  color: white;
-}
-
-.close-btn {
-  background-color: #777;
-  color: white;
+.loading-spinner {
+  text-align: center;
+  font-size: 18px;
+  color: gray;
 }

@@ -1,117 +1,96 @@
-import { useState,useEffect } from "react";
-import useCart from "./util/addtocart";
+import { useState, useEffect } from "react";
 
-const Popup = ({ showCustomizationPopup, setShowCustomizationPopup,selectedItemId }) => {
-  const [variants, setvariants] = useState([]);
-  const [selectedVariant, setSelectedVariant] = useState(null);
-  const [item,setItem]=useState (null);
-  const handleVariantSelect = (variant) => {
-    setSelectedVariant(variant);
-  };
+const Popup = ({
+    showCustomizationPopup,
+    setShowCustomizationPopup,
+    selectedItemId,
+    addToCart, // ✅ use this from props
+}) => {
+    const [variants, setVariants] = useState([]);
+    const [selectedVariant, setSelectedVariant] = useState(null);
+    const [item, setItem] = useState(null);
 
-  const { cart,setCart, addToCart } = useCart()
-  const confirmCustomization = () => {
-     let obj={
-      //  price:selectedVariant.price,
-      //  variantName:selectedVariant.size,
-      //  id:item.id,
-      //  name:item.name,
-      //  variantId:selectedVariant.id,
-      //  variantName:selectedVariant.size,
-      //  quantity: 1,
-      //  imageUrl:item.imageUrl,
-      
-categoryId
-: 
-"01965cc0-7a62-7a3d-b9b6-686c5abf8364",
-description
-: 
-"ded",
-id
-: 
-"06b5cec9-8c1c-4d7b-8ed6-baa65e137e32",
-imageUrl
-: 
-"5f9015a3-22aa-4915-9cd2-2f077b542c95_jonathan-borba-8l8Yl2ruUsg-unsplash.jpg",
-isAvailable
-: 
-false,
-isCustomizable
-: 
-false,
-name
-: 
-"pepper pizza",
-price
-: 
-226,
-quantity
-: 
-1,
-restaurantId
-: 
-"0bf004ba-5c55-4ba5-95b2-3ad1c3ffd748",
-variantId: null,
-variantName: null,
-variants:null
-     }
-  addToCart(obj,selectedVariant);
-  };
-  useEffect(() => {
-    if (showCustomizationPopup) {
-      fetch(`http://localhost:5191/api/menu/item/${selectedItemId}`)
-        .then((res) => res.json())
-        .then((data) => { 
-          console.log("assasaa",selectedItemId);
-          setItem(data.data);
-          setvariants(data.data.variants || []);
-        })
-        .catch((err) => console.error("Error fetching menu item:", err));
-    }
-  }, [ showCustomizationPopup]);
+    const handleVariantSelect = (variant) => {
+        setSelectedVariant(variant);
+    };
 
+    const confirmCustomization = () => {
+        const obj = {
+            categoryId: item.categoryId,
+            description: item.description,
+            id: item.id,
+            imageUrl: item.imageUrl,
+            isAvailable: false,
+            isCustomizable: false,
+            name: item.name,
+            price: selectedVariant.price,
+            quantity: 1,
+            restaurantId: item.restaurantId,
+            variantId: null,
+            variantName: null,
+            variants: null,
+        };
+        addToCart(obj, selectedVariant);
+        setShowCustomizationPopup(false);
+    };
 
-  return (
-    showCustomizationPopup && (
-      <div className="customization-popup-overlay">
-        <div className="customization-popup">
-          <h3>Customize {selectedVariant?.name}</h3>
-          <p>Please select options:</p>
+    useEffect(() => {
+        if (showCustomizationPopup) {
+            fetch(`http://localhost:5191/api/menu/item/${selectedItemId}`)
+                .then((res) => res.json())
+                .then((data) => {
+                    setItem(data.data);
+                    setVariants(data.data.variants || []);
+                })
+                .catch((err) =>
+                    console.error("Error fetching menu item:", err)
+                );
+        }
+    }, [showCustomizationPopup]);
 
-          {variants?.length > 0 && (
-            <div className="variant-options">
-              {variants.map((variant) => (
-                <div
-                  key={variant._id}
-                  className={`variant-option ${selectedVariant?._id === variant._id ? 'selected' : ''}`}
-                  onClick={() => handleVariantSelect(variant)}
-                >
-                  <span className="variant-name">{variant.size}</span>
-                  <span className="variant-price">₹{variant.price}</span>
+    if (!showCustomizationPopup) return null;
+
+    return (
+        <div className="customization-popup-overlay">
+            <div className="customization-popup">
+                <h3 className="heading-of-popup">{item?.name}</h3>
+                <p>Please select options:</p>
+
+                <div className="variant-options">
+                    {variants.map((variant) => (
+                        <div
+                            key={variant.id}
+                            className={`variant-option ${
+                                selectedVariant?.id === variant.id
+                                    ? "selected"
+                                    : ""
+                            }`}
+                            onClick={() => handleVariantSelect(variant)}
+                        >
+                            <span>{variant.size}</span>
+                            <span>₹{variant.price}</span>
+                        </div>
+                    ))}
                 </div>
-              ))}
-            </div>
-          )}
 
-          <div className="popup-actions">
-            <button
-              className="cancel-button"
-              onClick={() => setShowCustomizationPopup(false)}
-            >
-              Cancel
-            </button>
-            <button
-              className="confirm-button"
-              onClick={confirmCustomization}
-              disabled={variants?.length > 0 && !selectedVariant}
-            >
-              Add to Cart
-            </button>
-          </div>
+                <div className="popup-actions">
+                    <button
+                        className="cancel-btn"
+                        onClick={() => setShowCustomizationPopup(false)}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        className="btn"
+                        onClick={confirmCustomization}
+                        disabled={variants.length > 0 && !selectedVariant}
+                    >
+                        Add to Cart
+                    </button>
+                </div>
+            </div>x
         </div>
-      </div>
-    )
-  );
+    );
 };
 
 export default Popup;

@@ -10,6 +10,7 @@ const VerifiedRestaurants = () => {
   const [error, setError] = useState(null);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false); // NEW loading for modal
 
   const fetchVerifiedRestaurants = useCallback(async () => {
     try {
@@ -53,7 +54,6 @@ const VerifiedRestaurants = () => {
     fetchVerifiedRestaurants();
   }, [fetchVerifiedRestaurants]);
 
- 
   const handleDelete = async (restaurantId) => {
     if (!window.confirm("Are you sure you want to delete this restaurant?")) return;
 
@@ -72,7 +72,6 @@ const VerifiedRestaurants = () => {
       console.log("Delete response:", response.data);
 
       if (response.data && response.data.success) {
-        
         setRestaurants((prevRestaurants) => prevRestaurants.filter((r) => r.id !== restaurantId));
         setError(null);
       } else {
@@ -84,9 +83,46 @@ const VerifiedRestaurants = () => {
     }
   };
 
-  const handleView = (restaurant) => {
-    setSelectedRestaurant(restaurant);
-    setIsModalOpen(true);
+  // UPDATED handleView to make API call
+  const handleView = async (restaurant) => {
+    try {
+      setIsModalOpen(true);
+      setModalLoading(true); // Start modal loader
+
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Authentication required");
+        setModalLoading(false);
+        return;
+      }
+
+      const response = await axios.get(
+        `http://localhost:5191/api/restaurants/${restaurant.id}`, // Hitting by restaurant id
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      console.log("Single Restaurant Fetch:", response.data.data);
+
+      if (!response.data || !response.data.success || !response.data.data) {
+        throw new Error("Invalid restaurant detail response");
+      }
+
+      const fetchedRestaurant = {
+        ...response.data.data,
+        restaurantImage: response.data.data.imageUrl
+          ? `http://localhost:5191/uploads/${response.data.data.imageUrl}`
+          : "http://localhost:3000/default-restaurant.png"
+      };
+
+      console.log(fetchedRestaurant)
+      setSelectedRestaurant(fetchedRestaurant);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching restaurant details:", err);
+      setError(err.response?.data?.message || "Failed to fetch restaurant details");
+    } finally {
+      setModalLoading(false); // End modal loader
+    }
   };
 
   const closeModal = () => {
@@ -122,12 +158,12 @@ const VerifiedRestaurants = () => {
                   />
                 </div>
                 <div className="info-row">
-                  <span className="info-label">Owner:</span>
-                  <span>{restaurant.user?.name || "N/A"}</span>
+                  <span className="info-label">Type:</span>
+                  <span>{restaurant?.description || "N/A"}</span>
                 </div>
                 <div className="info-row">
                   <span className="info-label">Contact:</span>
-                  <span>{restaurant.user?.phone || "N/A"}</span>
+                  <span>{restaurant?.restaurantPhone || "N/A"}</span>
                 </div>
                 <div className="info-row">
                   <span className="info-label">Email:</span>
@@ -151,67 +187,79 @@ const VerifiedRestaurants = () => {
         </div>
       )}
 
-      {isModalOpen && selectedRestaurant && (
+      {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
             <div className="modal-header">
-              <h3>{selectedRestaurant.restaurantName} Details</h3>
+              <h3>{modalLoading ? "Loading..." : `${selectedRestaurant?.restaurantName} Details`}</h3>
               <button className="close-btn" onClick={closeModal}>×</button>
             </div>
             <div className="modal-body">
-              <div className="modal-section">
-                <h4>Owner Details</h4>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <span className="info-label">Name:</span>
-                    <span>{selectedRestaurant.user?.name || "N/A"}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Email:</span>
-                    <span>{selectedRestaurant.user?.email || "N/A"}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Phone:</span>
-                    <span>{selectedRestaurant.user?.phone || "N/A"}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="modal-section">
-                <h4>Address Details</h4>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <span className="info-label">Sector:</span>
-                    <span>{selectedRestaurant.sector || "N/A"}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Locality:</span>
-                    <span>{selectedRestaurant.locality || "N/A"}</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Full Address:</span>
-                    <span>{selectedRestaurant.address || "N/A"}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="modal-section">
-                <h4>Documents</h4>
-                <div className="documents-view">
-                  {selectedRestaurant.documents?.map((doc, index) => (
-                    <div key={index} className="document-item">
-                      <a 
-                        href={`http://localhost:5191/uploads/${doc}`} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="document-link"
-                      >
-                        View Document {index + 1}
-                      </a>
+              {modalLoading ? (
+                <div className="loading-spinner"></div>
+              ) : selectedRestaurant ? (
+                <>
+                  <div className="modal-section">
+                    <h4>Owner Details</h4>
+                    <div className="info-grid">
+                      <div className="info-item">
+                        <span className="info-label">Name:</span>
+                        <span>{selectedRestaurant.owner?.name || "N/A"}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Email:</span>
+                        <span>{selectedRestaurant.owner?.email || "N/A"}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Phone:</span>
+                        <span>{selectedRestaurant.owner?.phone || "N/A"}</span>
+                      </div>
                     </div>
-                  )) || <p>No documents available</p>}
-                </div>
-              </div>
+                  </div>
+
+                  <div className="modal-section">
+                    <h4>Address Details</h4>
+                    <div className="info-grid">
+                      <div className="info-item">
+                        <span className="info-label">City:</span>
+                        <span>{selectedRestaurant.owner?.address?.city || "N/A"}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Landmark:</span>
+                        <span>{selectedRestaurant.owner?.address?.landmark || "N/A"}</span>
+                      </div>
+                      <div className="info-item">
+                        <span className="info-label">Shop No:</span>
+                        <span>{selectedRestaurant.owner?.address?.shopNumber || "N/A"}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="modal-section">
+                    <h4>Documents</h4>
+                    <div className="documents-view">
+                      {selectedRestaurant.Document?.length > 0 ? (
+                        selectedRestaurant.documents.map((doc, index) => (
+                          <div key={index} className="document-item">
+                            <a 
+                              href={`http://localhost:5191/uploads/${doc}`} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="document-link"
+                            >
+                              View Document {index + 1}
+                            </a>
+                          </div>
+                        ))
+                      ) : (
+                        <p>No documents available</p>
+                      )}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <p>Unable to load restaurant details.</p>
+              )}
             </div>
           </div>
         </div>

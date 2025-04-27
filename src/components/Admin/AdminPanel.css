@@ -472,4 +472,46 @@ body {
 .download-link:hover {
   background-color: #218838;
 }
+.logout-section {
+  margin-top: auto;
+  padding: 1.5rem;
+  border-top: 1px solid var(--gray-light);
+  display: flex;
+  justify-content: center;
+}
 
+.logout-box {
+  width: 100%;
+  background-color: white;
+  border: 1px solid var(--gray-light);
+  border-radius: var(--border-radius);
+  padding: 0.75rem 1rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-left:5px ;
+}
+
+.logout-box:hover {
+  background-color: var(--gray-light);
+}
+
+.logout-box .logout-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--gray);
+  transition: color 0.2s ease;
+}
+
+.logout-box:hover .logout-icon {
+  color: var(--primary);
+}
+
+.logout-box span {
+  font-weight: 500;
+  color: var(--dark);
+}

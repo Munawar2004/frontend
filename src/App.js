@@ -8,7 +8,8 @@ import Home from "./components/Home";
 import RestaurantMenu from "./components/RestaurantMenu";
 import AdminPanel from "./components/Admin/AdminPanel";
 import RestaurantDashboard from "./components/Rest/RestaurantDashboard";
-import Orders from "./components/Rest/Orders";
+import Orders from "./components/Rest/Orders";  // Correct the import path
+import CategoryPage from "./components/CategoryPage";
 
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/restaurant/:id" element={<RestaurantMenu />} /> 
         <Route path="/restaurant/:id/orders" element={<Orders />} />
         <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/category/:categoryid" element={<CategoryPage />} />
         <Route path="/restaurant-dashboard" element={<RestaurantDashboard />} />
       </Routes>
     </Router>

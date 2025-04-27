@@ -28,12 +28,12 @@ const Orders = () => {
         return;
       }
 
-      // Filter only the orders that are "Delivered"
-      const deliveredOrders = response.data.data.filter(
-        (order) => order.status === "Delivered"
+      // Filter only the orders that are "Pending"
+      const pendingOrders = response.data.data.filter(
+        (order) => order.status === "Pending"
       );
 
-      setOrderlist(deliveredOrders); // Set only the delivered orders
+      setOrderlist(pendingOrders); // Set only the pending orders
       setError(null);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch orders");
@@ -54,13 +54,52 @@ const Orders = () => {
     }
   };
 
+  const updateOrderStatus = (orderId, status) => {
+    const url = `http://localhost:5191/api/orders/${orderId}`;
+
+    const data = { status };
+
+    const options = {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    };
+
+    fetch(url, options)
+      .then(response => response.json())
+      .then(result => {
+        console.log('Order status updated:', result);
+      })
+      .catch(error => {
+        console.error('Error updating order status:', error);
+        // Handle error, like showing an error message
+      });
+  };
+
+  const viewOrderDetails = async (id) => {
+    try {
+      setPopupLoading(true);
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`http://localhost:5191/api/orders/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setSelectedOrder(response.data); // Assuming response is the full order object
+    } catch (err) {
+      console.error("Failed to fetch order details", err);
+    } finally {
+      setPopupLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchOrders();
   }, []);
 
   return (
     <div className="orders">
-      <h2>Delivered Orders</h2>
+      <h2>Orders</h2>
       {error && <div className="error-message">{error}</div>}
       {loading ? (
         <p>Loading orders...</p>
@@ -97,7 +136,7 @@ const Orders = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="6">No delivered orders found.</td>
+                <td colSpan="6">No pending orders found.</td>
               </tr>
             )}
           </tbody>
@@ -145,6 +184,22 @@ const Orders = () => {
                 </section>
 
                 <div className="modal-actions">
+                  {selectedOrder.status === "Pending" && (
+                    <>
+                      <button
+                        onClick={() => updateOrderStatus(selectedOrder.id, "Accepted")}
+                        className="accept-btn"
+                      >
+                        Accept
+                      </button>
+                      <button
+                        onClick={() => updateOrderStatus(selectedOrder.id, "Declined")}
+                        className="decline-btn"
+                      >
+                        Decline
+                      </button>
+                    </>
+                  )}
                   <button onClick={() => setSelectedOrder(null)} className="close-btn">
                     Close
                   </button>
