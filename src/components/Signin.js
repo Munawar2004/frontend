@@ -4,7 +4,6 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import "./Signin.css";
 
-// Configure axios defaults
 axios.defaults.withCredentials = true;
 
 const SignIn = () => {
@@ -42,8 +41,7 @@ const SignIn = () => {
         const token = response.data.data.auth_token;
         console.log("Raw token:", token);
         localStorage.setItem("token", token);
-        
-        // Decode the JWT token 
+         
         const decodedToken = jwtDecode(token);
         console.log("Full decoded token:", decodedToken);
         console.log("User type from token:", decodedToken.userType);
@@ -82,9 +80,9 @@ const SignIn = () => {
         setError(err.response.data?.message || "Invalid credentials. Please try again.");
       } else if (err.request) {
         
-        setError("No response from server. Please try again later.");
+        setError("No response from server");
       } else {
-        setError("An error occurred. Please try again.");
+        setError("error ");
       }
     } finally {
       setIsLoading(false);

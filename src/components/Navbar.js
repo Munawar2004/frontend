@@ -92,19 +92,47 @@ const Navbar = () => {
         };
     }, []);
 
-    const handleLogout = async () => {
-        try {
-            await axios.post(
-                "http://localhost:5000/api/auth/logout",
-                {},
-                { withCredentials: true }
-            );
-            clearUserData();
-            navigate("/");
-        } catch (error) {
-            console.error("Logout failed:", error);
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/");
+      };
+
+      const signin = () => {
+        navigate("/");
+      };
+
+const handleOrdersClick = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        setError("Authentication token not found");
+        navigate("/login");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:5191/my-orders", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to fetch orders");
         }
-    };
+
+        const data = await response.json();
+        console.log("User orders:", data.data);
+
+        // Navigate to orders page (and pass orders if you want via state)
+        navigate("/orders", { state: { orders: data.data } });
+    } catch (err) {
+        console.error("Fetch orders error:", err.message);
+        setError(err.message);
+    }
+};
 
     const handleAddressChange = (e) => {
         const { name, value } = e.target;
@@ -231,8 +259,6 @@ const Navbar = () => {
 
             const data = await response.json();
             console.log("Address saved successfully:", data);
-
-            // If this is the first address, set it as default
             if (savedAddresses.length === 0) {
                 localStorage.setItem("defaultAddressId", data.data._id);
                 setDefaultAddressId(data.data._id);
@@ -265,13 +291,6 @@ const Navbar = () => {
         setShowAddressForm(true);
         fetchAddresses();
     };
-
-    // Get the default address object
-    const getDefaultAddress = () => {
-        if (!defaultAddressId) return null;
-        return savedAddresses.find((addr) => addr._id === defaultAddressId);
-    };
-
     return (
         <>
             <nav className="navbar">
@@ -292,7 +311,7 @@ const Navbar = () => {
                             ▼
                         </button>
                         {addressDropDownVisible && (
-                            <div className="dropdown-menu">
+                            <div className="address-dropdown-menu">
                                 <ul>
                                     {savedAddresses.map((addr) => (
                                         <li
@@ -363,7 +382,7 @@ const Navbar = () => {
                                                 <button
                                                     onClick={() =>
                                                         handleDeleteAddress(
-                                                            addr._id
+                                                            addr.id
                                                         )
                                                     }
                                                     disabled={loading}
@@ -377,7 +396,7 @@ const Navbar = () => {
                                 </ul>
                             </div>
                         )}
-                    </div>
+                        </div>
                     </div>
                 </div>
 
@@ -392,16 +411,19 @@ const Navbar = () => {
                         {dropdownVisible && (
                             <div className="dropdown-menu">
                                 <button onClick={() => navigate("/profile")}>
-                                    👤 Profile
+                                     Profile
                                 </button>
                                 <button onClick={openAddressForm}>
-                                    🏠 Address
+                                     Address
+                                </button>
+                                <button onClick={handleOrdersClick}>
+                                    Orders
                                 </button>
                                 <button
                                     className="logout-btn"
                                     onClick={handleLogout}
                                 >
-                                    🚪 Logout
+                                    Logout
                                 </button>
                             </div>
                         )}
@@ -409,14 +431,14 @@ const Navbar = () => {
                 ) : userName ? (
                     <button
                         className="signin-btn"
-                        onClick={() => navigate("/profile")}
+                        onClick={signin}
                     >
                         {userName}
                     </button>
                 ) : (
                     <button
                         className="signin-btn"
-                        onClick={() => navigate("/login")}
+                        onClick={signin}
                     >
                         Sign In
                     </button>
@@ -523,92 +545,7 @@ const Navbar = () => {
                             </button>
                         </div>
 
-                        {savedAddresses.length > 0 && (
-                            <div className="saved-address-list">
-                                <h4>Saved Addresses</h4>
-                                <ul>
-                                    {savedAddresses.map((addr) => (
-                                        <li
-                                            key={addr._id}
-                                            className="saved-address-item"
-                                        >
-                                            <div className="address-content">
-                                                <div className="address-header">
-                                                    {addr.id ===
-                                                        defaultAddressId && (
-                                                        <span className="default-badge">
-                                                            ⭐ DEFAULT
-                                                        </span>
-                                                    )}
-                                                    <strong>
-                                                        {addr.addressType ||
-                                                            "Other"}{" "}
-                                                        Address
-                                                    </strong>
-                                                </div>
-
-                                                <div className="address-body">
-                                                    <p>
-                                                        <strong>Area:</strong>{" "}
-                                                        {addr.area}
-                                                    </p>
-                                                    <p>
-                                                        <strong>City:</strong>{" "}
-                                                        {addr.city}
-                                                    </p>
-                                                    <p>
-                                                        <strong>
-                                                            Landmark:
-                                                        </strong>{" "}
-                                                        {addr.landmark}
-                                                    </p>
-                                                    <p>
-                                                        <strong>Floor:</strong>{" "}
-                                                        {addr.floor || "N/A"}
-                                                    </p>
-                                                    {addr.shopNumber && (
-                                                        <p>
-                                                            <strong>
-                                                                Shop No.:
-                                                            </strong>{" "}
-                                                            {addr.shopNumber}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <div className="address-actions">
-                                                {addr.id !==
-                                                    defaultAddressId && (
-                                                    <button
-                                                        onClick={() =>
-                                                            handleSetDefaultAddress(
-                                                                addr.id
-                                                            )
-                                                        }
-                                                        disabled={loading}
-                                                        className="set-default-btn"
-                                                    >
-                                                        Set Default
-                                                    </button>
-                                                )}
-                                                <button
-                                                    onClick={() =>
-                                                        handleDeleteAddress(
-                                                            addr._id
-                                                        )
-                                                    }
-                                                    disabled={loading}
-                                                    className="delete-btn"
-                                                >
-                                                    🗑️
-                                                </button>
-                                            </div>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
+                      
                     </div>
                 </div>
             )}

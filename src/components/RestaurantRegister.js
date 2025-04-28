@@ -7,21 +7,15 @@ function RestaurantRegistration() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
-  // Owner details state
   const [ownerName, setOwnerName] = useState("");
   const [ownerPhone, setOwnerPhone] = useState("");
   const [ownerEmail, setOwnerEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  // Restaurant details state
   const [restaurantName, setRestaurantName] = useState("");
   const [foodType, setFoodType] = useState("");
   const [restaurantPhone, setRestaurantPhone] = useState("");
   const [restaurantImage, setRestaurantImage] = useState(null);
   const [validDocument, setValidDocument] = useState(null);
-
-  // Address details state
   const [area, setArea] = useState("");
   const [city, setCity] = useState("");
   const [landmark, setLandmark] = useState("");
@@ -44,20 +38,15 @@ function RestaurantRegistration() {
     try {
       const formData = new FormData();
       
-      // Owner details
       formData.append("ownerName", ownerName);
       formData.append("ownerEmail", ownerEmail);
       formData.append("ownerPassword", password);
       formData.append("ownerPhone", ownerPhone);
-
-      // Restaurant details
       formData.append("restaurantName", restaurantName);
       formData.append("restaurantPhone", restaurantPhone);
       formData.append("description", "New restaurant registration");
       formData.append("photo", restaurantImage);
       formData.append("validDocument", validDocument);
-
-      // Address details
       formData.append("area", area);
       formData.append("city", city);
       formData.append("landmark", landmark);
@@ -149,7 +138,6 @@ function RestaurantRegistration() {
           </div>
         </div>
 
-        {/* Owner Details */}
         <div className="form-section">
           <h2 className="section-title">Owner Details</h2>
           <div className="form-group">
@@ -197,7 +185,7 @@ function RestaurantRegistration() {
           </div>
         </div>
 
-        {/* Address Details */}
+    
         <div className="form-section">
           <h2 className="section-title">Restaurant Location</h2>
           <div className="form-group">

@@ -1,100 +1,3 @@
-// Original code with comments
-/*
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import "./Register.css";
-
-const Register = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [dob, setDob] = useState("");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const navigate = useNavigate();
-
-  // Check if email is already registered
-  const checkEmailExists = async (email) => {
-    try {
-      const response = await axios.post("http://localhost:5000/api/auth/check-email", { email });
-      setEmailError(response.data.exists ? "⚠️ Email is already in use. Try another one." : "");
-    } catch (error) {
-      console.error("❌ Error checking email:", error);
-    }
-  };
-
-  const handleEmailChange = (e) => {
-    const newEmail = e.target.value;
-    setEmail(newEmail);
-    if (newEmail) checkEmailExists(newEmail);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    if (emailError) {
-      alert("⚠️ Please fix email error before submitting.");
-      return;
-    }
-
-    try {
-      await axios.post("http://localhost:5191/api/users", {
-        name,
-        email,
-        dob,
-        phone,
-        password,
-      });
-
-      alert("🎉 Registration successful! Please sign in.");
-      navigate("/");
-    } catch (err) {
-      setError("❌ Registration failed. Please try again.");
-    }
-  };
-
-  return (
-    <div className="register-container">
-      <h2>Register as User</h2>
-      {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name:</label>
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
-        </div>
-        <div>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={handleEmailChange} required />
-          {emailError && <p className="error">{emailError}</p>}
-        </div>
-        <div>
-          <label>Date of Birth:</label>
-          <input type="date" value={dob} onChange={(e) => setDob(e.target.value)} required />
-        </div>
-        <div>
-          <label>Phone Number:</label>
-          <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        </div>
-        <button type="submit" disabled={emailError}>Register</button>
-      </form>
-      <p>
-        Already have an account? <Link to="/">Sign In</Link>
-      </p>
-    </div>
-  );
-};
-
-export default Register;
-*/
-
-// Updated code with fixes
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -204,8 +107,6 @@ const Register = () => {
          
           const validationErrors = err.response.data.errors;
           console.log("Validation errors:", validationErrors);
-          
-          // Format validation errors into a readable message
           let errorMessage = "Please fix the following errors:\n";
           Object.entries(validationErrors).forEach(([field, errors]) => {
             errorMessage += `\n${field}:\n`;
@@ -242,7 +143,6 @@ const Register = () => {
       {error && <p style={{ color: 'red' }}>{error}</p>}
       
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
-        {/* Name input */}
         <div style={{ marginBottom: '15px', position: 'relative', zIndex: 2 }}>
           <label htmlFor="name" style={{ display: 'block', marginBottom: '5px' }}>Name:</label>
           <input 

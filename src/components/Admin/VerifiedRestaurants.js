@@ -10,7 +10,7 @@ const VerifiedRestaurants = () => {
   const [error, setError] = useState(null);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalLoading, setModalLoading] = useState(false); // NEW loading for modal
+  const [modalLoading, setModalLoading] = useState(false); 
 
   const fetchVerifiedRestaurants = useCallback(async () => {
     try {
@@ -83,11 +83,10 @@ const VerifiedRestaurants = () => {
     }
   };
 
-  // UPDATED handleView to make API call
   const handleView = async (restaurant) => {
     try {
       setIsModalOpen(true);
-      setModalLoading(true); // Start modal loader
+      setModalLoading(true); 
 
       const token = localStorage.getItem("token");
       if (!token) {
@@ -97,7 +96,7 @@ const VerifiedRestaurants = () => {
       }
 
       const response = await axios.get(
-        `http://localhost:5191/api/restaurants/${restaurant.id}`, // Hitting by restaurant id
+        `http://localhost:5191/api/restaurants/${restaurant.id}`, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -121,7 +120,7 @@ const VerifiedRestaurants = () => {
       console.error("Error fetching restaurant details:", err);
       setError(err.response?.data?.message || "Failed to fetch restaurant details");
     } finally {
-      setModalLoading(false); // End modal loader
+      setModalLoading(false); 
     }
   };
 
@@ -164,14 +163,6 @@ const VerifiedRestaurants = () => {
                 <div className="info-row">
                   <span className="info-label">Contact:</span>
                   <span>{restaurant?.restaurantPhone || "N/A"}</span>
-                </div>
-                <div className="info-row">
-                  <span className="info-label">Email:</span>
-                  <span>{restaurant.user?.email || "N/A"}</span>
-                </div>
-                <div className="info-row">
-                  <span className="info-label">Location:</span>
-                  <span>{restaurant.sector}, {restaurant.locality}</span>
                 </div>
               </div>
               <div className="card-footer">

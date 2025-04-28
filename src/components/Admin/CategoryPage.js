@@ -72,7 +72,7 @@ const CategoryPage = () => {
       const formData = new FormData();
       formData.append('name', category.name);
       if (category.imageUrl instanceof File) {
-        formData.append('Photo', category.imageUrl); // Make sure your backend expects 'image'
+        formData.append('Photo', category.imageUrl); 
       }
   
       const url = id 

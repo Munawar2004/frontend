@@ -6,7 +6,7 @@ import AddDish from "./AddDish";
 import DisplayMenu from "./DisplayMenu";
 
 const AddMenu = () => {
-  const navigate = useNavigate();
+  
   const [dishes, setDishes] = useState({});
   const [restaurantId, setRestaurantId] = useState(null);
   const [error, setError] = useState("");
@@ -14,7 +14,7 @@ const AddMenu = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let isMounted = true; // To prevent memory leaks
+    let isMounted = true; 
 
     const getRestaurantId = async () => {
       try {
@@ -118,7 +118,7 @@ const AddMenu = () => {
               imageUrl: item.imageUrl,
               isCustomizable: item.isCustomizable,
               variants: item.variants || [],
-              isAvailable: item.isAvailable !== false // Default to true if not specified
+              isAvailable: item.isAvailable !== false
             });
           });
         }
@@ -138,9 +138,9 @@ const AddMenu = () => {
 
   const handleSuccess = (message) => {
     setSuccess(message);
-    setTimeout(() => setSuccess(""), 3000); // Auto-hide after 3 seconds
+    setTimeout(() => setSuccess(""), 3000); 
     if (restaurantId) {
-      fetchMenu(restaurantId); // Refresh the menu
+      fetchMenu(restaurantId); 
     }
   };
 

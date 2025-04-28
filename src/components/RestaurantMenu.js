@@ -32,7 +32,7 @@ function RestaurantMenu() {
     const [selectedItem, setSelectedItem] = useState(null);
     const [cartitems, setcartitems] = useState([]);
     const { cart, setCart, addToCart, removeFromCart } = useCart();
-    // Fetch restaurant menu
+    
     useEffect(() => {
         const fetchRestaurantMenu = async () => {
             try {
@@ -100,9 +100,6 @@ function RestaurantMenu() {
     }, [selectedCustomizableItem, showCustomizationPopup]);
     console.log("cart------", cart);
 
-    //   const showpop=()=>{
-    // setShowCustomizationPopup(true)
-    //   }
     const handleAddClick = (item) => {
         if (item.isCustomizable === true) {
             setSelectedItemId(item.id);
@@ -162,7 +159,7 @@ function RestaurantMenu() {
             let response;
 
             if (paymentMethod === "cod") {
-                // COD order
+               
                 response = await axios.post(
                     "http://localhost:5191/api/orders",
                     orderData,
@@ -181,7 +178,7 @@ function RestaurantMenu() {
                     alert("Order placed successfully!");
                 }
             } else {
-                // Online payment
+                
                 const paymentResponse = await axios.post(
                     "http://localhost:5191/api/payment",
                     orderData,
@@ -196,7 +193,6 @@ function RestaurantMenu() {
                 if (paymentResponse.data && paymentResponse.data.success) {
                     const transactionId = paymentResponse.data.transactionId;
 
-                    // Update orderData with the transaction ID
                     const finalOrderData = {
                         ...orderData,
                         paymentTransactionId: transactionId,
@@ -258,7 +254,7 @@ function RestaurantMenu() {
     useEffect(() => {
         console.log("Cart updated and saved to localStorage:", cart);
         localStorage.setItem("cart", JSON.stringify(cart));
-        setcartitems(cart); // no need to read again from localStorage
+        setcartitems(cart); 
     }, [cart]);
 
     useEffect(() => {
@@ -268,7 +264,7 @@ function RestaurantMenu() {
     if (error) return <div className="error">{error}</div>;
     if (!restaurant) return <div className="error">Restaurant not found</div>;
 
-    // Categorize menu items
+   
     const categorizedMenu = {};
     filteredMenu.forEach((category) => {
         if (category.categoryName && category.items) {
@@ -278,11 +274,6 @@ function RestaurantMenu() {
 
     return (
         <div className="restaurant-menu">
-            {/* Customization Popup */}
-            {/*   
-    <Popup showCustomizationPopup={showCustomizationPopup}setShowCustomizationPopup= {setShowCustomizationPopup}></Popup> */}
-
-            {/* Header */}
 
             <header className="header">
                 <div className="header-content">
@@ -351,8 +342,6 @@ function RestaurantMenu() {
                     </div>
                 </div>
             </header>
-
-            {/* Search Bar */}
             <div className="search-bar">
                 <span className="search-icon">🔍</span>
                 <input
@@ -363,7 +352,6 @@ function RestaurantMenu() {
                 />
             </div>
 
-            {/* Menu Items */}
             <div className="menu-categories">
                 {Object.keys(categorizedMenu).map((category) => (
                     <div key={category} className="category-section">
@@ -447,7 +435,6 @@ function RestaurantMenu() {
                 ))}
             </div>
 
-            {/* Cart Sidebar */}
             <div className={`cart-sidebar ${isCartOpen ? "open" : ""}`}>
                 <div className="cart-header">
                     <h2>Your Cart</h2>

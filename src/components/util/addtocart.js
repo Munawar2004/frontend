@@ -2,18 +2,15 @@ import { useState, useEffect } from "react";
 
 const useCart = () => {
     const [cart, setCart] = useState(() => {
-        // Load cart from localStorage if available
         const storedCart = localStorage.getItem("cart");
         return storedCart ? JSON.parse(storedCart) : [];
     });
 
     useEffect(() => {
-        // Update localStorage whenever cart state changes
         if (cart.length > 0) {
             localStorage.setItem("cart", JSON.stringify(cart));
         }
     }, [cart]);
-    // Updated removeFromCart function
     const removeFromCart = (itemId, variantId = null) => {
         setCart((prevCart) => {
             const existingItem = prevCart.find(

@@ -178,6 +178,7 @@ const Orders = () => {
                         )}
                         <p><strong>{item.menuItemName}</strong></p>
                         <p><strong>Variant:</strong> {item.variantName || "Default"}</p>
+                        <p><strong>Quantity:</strong> {item.quantity}</p>
                       </li>
                     ))}
                   </ul>

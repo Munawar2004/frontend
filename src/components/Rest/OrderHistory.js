@@ -17,23 +17,23 @@ const Orders = () => {
         setLoading(false);
         return;
       }
-
-      const response = await axios.get("http://localhost:5191/api/orders", {
+  
+      const response = await axios.get("http://localhost:5191/my-orders", {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      if (!response.data || !Array.isArray(response.data.data)) {
+  
+      if (!response.data || !response.data.data) {
         setError("Invalid response format from server");
         setLoading(false);
         return;
       }
-
-      // Filter only the orders that are "Delivered"
-      const deliveredOrders = response.data.data.filter(
-        (order) => order.status === "Delivered"
-      );
-
-      setOrderlist(deliveredOrders); // Set only the delivered orders
+  
+      const data = response.data.data;
+  
+      const ordersArray = Array.isArray(data) ? data : [data];
+  
+      // 🔥 Don't filter for Delivered yet — show everything
+      setOrderlist(ordersArray);
       setError(null);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch orders");
@@ -41,6 +41,7 @@ const Orders = () => {
       setLoading(false);
     }
   };
+  
 
   const fetchOrderDetails = async (id) => {
     try {

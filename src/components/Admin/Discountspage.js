@@ -165,8 +165,7 @@ const DiscountPage = () => {
                 <strong>Min Order:</strong> {discount.minOrderValue} |{" "}
                 <strong>Valid Till:</strong>{" "}
                 {new Date(discount.validTill).toLocaleDateString()}
-
-                {/* Delete Button */}
+                
                 <button
                   onClick={() => handleDelete(discount._id || discount.code)}
                   className="delete-button"

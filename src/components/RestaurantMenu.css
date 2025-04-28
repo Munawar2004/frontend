@@ -1,4 +1,3 @@
-/* Restaurant Menu Styles */
 .restaurant-menu {
   max-width: 1200px;
   margin: 0 auto;
@@ -8,7 +7,6 @@
   position: relative;
 }
 
-/* Header Styles */
 .header {
   background-color: #ffffff;
   padding: 16px;
@@ -591,12 +589,6 @@
 .cart-quantity-controls button:hover {
   background-color: #e0e0e0;
 }
-
-
-
-
-
-
 
 /* varitent popup */
 

@@ -1,4 +1,4 @@
-/* ✅ Hero Section Fix */
+
 .hero-section {
   position: relative;
   height: 55vh;
@@ -22,7 +22,7 @@
 }
 
 .hero-section h1 {
-  font-size: 3rem;  /* Bigger text */
+  font-size: 3rem;  
   font-weight: bolder;
   line-height: 1.4;
   margin-bottom: 15px;
@@ -63,28 +63,24 @@
   background: darkorange;
 }
 
-/* ✅ Restaurants List Grid */
-
-/* ✅ Restaurants Container - Grid Layout */
 .restaurants-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Fixed 3 columns */
+  grid-template-columns: repeat(3, 1fr); 
   gap: 20px;
   padding: 40px;
-  max-width: 1200px; /* Adjusted max-width for 3 columns */
-  margin: 0 auto; /* Center the grid */
+  max-width: 1200px;
+  margin: 0 auto; 
 }
 
-/* ✅ Restaurant Card Styling */
 .restaurant-card {
   background: white;
   border-radius: 12px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s;
-  width: 100%; /* Ensure card takes full width of its grid cell */
-  max-width: 350px; /* Increased max-width for better spacing */
-  margin: 0 auto; /* Center the card in its grid cell */
+  width: 100%; 
+  max-width: 350px; 
+  margin: 0 auto; 
 }
 
 .restaurant-card:hover {
@@ -92,7 +88,6 @@
   box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.2);
 }
 
-/* ✅ Restaurant Image */
 .restaurant-image img {
   width: 100%;
   height: 200px;
@@ -101,7 +96,6 @@
   border-top-right-radius: 12px;
 }
 
-/* ✅ Restaurant Info */
 .restaurant-info {
   padding: 15px;
   text-align: center;
@@ -119,7 +113,6 @@
   margin-bottom: 12px;
 }
 
-/* ✅ View Menu Button */
 .view-menu-button {
   background: #ff6600;
   color: white;
@@ -137,7 +130,6 @@
   background: #e65c00;
 }
 
-/* Home.css */
 .search-results-container {
   padding: 20px;
 }
@@ -187,7 +179,6 @@
   color: #666;
 }
 
-/* Make the grid responsive */
 @media (max-width: 1000px) {
   .restaurants-container {
     grid-template-columns: repeat(2, 1fr);
@@ -200,8 +191,8 @@
   }
 }
 
-/* ✅ Categories Section Styles */
 .categories-section {
+  margin-top: 28px;
   position: relative;
   text-align: center;
   overflow: hidden;
@@ -210,64 +201,62 @@
 }
 
 .categories-section h2 {
-  margin-bottom: 2.5rem;
+  margin:0, 2.5rem;
   color: #333;
   font-size: 2rem;
   font-weight: bold;
 }
 
-/* ✅ Container for Categories */
 .categories-container-wrapper {
   position: relative;
   overflow-x: auto;
   scroll-behavior: smooth;
+    margin-top: 2rem;
 }
 .categories-container {
-  display: flex;
+   display: flex;
   flex-wrap: nowrap;
   gap: 1rem;
   padding: 1rem 0;
-  margin: 0 2rem;
-  background-color: transparent; /* 👈 Add this line */
+  margin-top: 200px;
+  width: 80%;
+  margin: auto;
+  overflow-x: auto;  
+  scrollbar-color: #ccc transparent; 
+
+ 
 }
 
+.categories-container::-webkit-scrollbar {
+  display: none;
+}
 
-/* ✅ Category Card */
-.category-card {
+.category-cards {
   flex: 0 0 auto;
   display: flex;
   flex-direction: column;
+  gap: 15px;
   align-items: center;
   justify-content: flex-start;
-  border-radius: 20px;
   width: 140px;
-  height: 170px;
-  transition: all 0.3s ease;
+  height: 165px;
   cursor: pointer;
-  background-color: transparent; /* 👈 Add this */
+  background-color: transparent; 
 }
 
-
-
-/* ✅ Category Image in Circle */
 .category-image {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 12px;
-}
-
-.category-image img {
-  width: 100%;
+   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-/* ✅ Category Name */
+.category-image img {
+  width: 100%;
+  height: 90%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .category-card h3 {
   font-size: 1.1rem;
   color: #333;
@@ -276,34 +265,3 @@
   font-weight: 600;
   letter-spacing: 0.5px;
 }
-
-/* ✅ Arrow Buttons
-.arrow-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #fff;
-  border: none;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  font-size: 1.5rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 10;
-}
-
-.arrow-btn:hover {
-  background: #ff6b6b;
-  color: #fff;
-}
-
-/* Left and Right Button Specific */
-/* .arrow-left {
-  left: 10px;
-}
-
-.arrow-right {
-  right: 10px;
-}  */

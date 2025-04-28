@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./AddMenu.css";
-import { useNavigate } from "react-router-dom";
 
 const AddDish = ({ restaurantId, fetchMenu }) => {
   const [dishName, setDishName] = useState("");
@@ -249,9 +248,9 @@ const AddDish = ({ restaurantId, fetchMenu }) => {
                     onChange={(e) => {
                       setCustomizable(e.target.checked);
                       if (e.target.checked) {
-                        setShowVariantPopup(true); // open popup immediately
+                        setShowVariantPopup(true); 
                       } else {
-                        setVariants([]); // reset variants if unchecking
+                        setVariants([]);
                       }
                     }}
                   />
@@ -288,7 +287,7 @@ const AddDish = ({ restaurantId, fetchMenu }) => {
       </div>
 
       {showVariantPopup && (
-        <div className="variant-popup">
+        <div className="popup">
           <div className="popup-content">
             <h3>Add Variant</h3>
             <div className="form-group">

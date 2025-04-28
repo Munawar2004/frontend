@@ -10,6 +10,7 @@ import AdminPanel from "./components/Admin/AdminPanel";
 import RestaurantDashboard from "./components/Rest/RestaurantDashboard";
 import Orders from "./components/Rest/Orders";  // Correct the import path
 import CategoryPage from "./components/CategoryPage";
+import OrdersPage from './components/OrderPage';
 
 
 const App = () => {
@@ -25,6 +26,8 @@ const App = () => {
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/category/:categoryid" element={<CategoryPage />} />
         <Route path="/restaurant-dashboard" element={<RestaurantDashboard />} />
+        <Route path="/orders" element={<OrdersPage />} />
+
       </Routes>
     </Router>
   );

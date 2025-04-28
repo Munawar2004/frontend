@@ -7,8 +7,6 @@ const PendingRestaurants = () => {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [showFileModal, setShowFileModal] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalLoading, setModalLoading] = useState(false);
@@ -27,15 +25,8 @@ const PendingRestaurants = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      
-      const transformedRestaurants = response.data.data.map(restaurant => ({
-        ...restaurant,
-        restaurantImage: restaurant.restaurantImage 
-          ? `http://localhost:5191/uploads/${restaurant.restaurantImage}`
-          : "http://localhost:3000/default-restaurant.png"
-      }));
-
-      setRestaurants(transformedRestaurants);
+      setRestaurants(response.data.data);
+      console.log("restaurant",restaurants,response.data.data);
       setError(null);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch pending restaurants");
@@ -79,7 +70,7 @@ const PendingRestaurants = () => {
   const handleView = async (restaurant) => {
     try {
       setIsModalOpen(true);
-      setModalLoading(true); // Start modal loader
+      setModalLoading(true); 
 
       const token = localStorage.getItem("token");
       if (!token) {
@@ -89,7 +80,7 @@ const PendingRestaurants = () => {
       }
 
       const response = await axios.get(
-        `http://localhost:5191/api/restaurants/${restaurant.id}`, // Hitting by restaurant id
+        `http://localhost:5191/api/restaurants/${restaurant.id}`, 
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -113,7 +104,7 @@ const PendingRestaurants = () => {
       console.error("Error fetching restaurant details:", err);
       setError(err.response?.data?.message || "Failed to fetch restaurant details");
     } finally {
-      setModalLoading(false); // End modal loader
+      setModalLoading(false); 
     }
   };
 
@@ -145,7 +136,7 @@ const PendingRestaurants = () => {
               <div className="card-body">
                 <div className="restaurant-image">
                   <img 
-                    src={restaurant.restaurantImage} 
+                    src={`http://localhost:5191/uploads/${restaurant.imageUrl}`} 
                     alt={restaurant.restaurantName}
                     className="restaurant-preview"
                   />

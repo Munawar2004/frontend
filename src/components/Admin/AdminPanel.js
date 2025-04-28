@@ -48,8 +48,6 @@ const AdminPanel = () => {
             </li>
           </ul>
         </nav>
-
-        {/* Logout Option */}
         <div className="logout-section">
   <div className="logout-box" onClick={handleLogout}>
     <FiLogOut className="logout-icon" />

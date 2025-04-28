@@ -1,4 +1,4 @@
-/* Users Page Styles */
+
 .users-container {
   background: white;
   border-radius: var(--border-radius);
@@ -33,7 +33,6 @@
   background-color: var(--gray-light);
 }
 
-/* Pagination Styles */
 .pagination {
   display: flex;
   justify-content: center;
@@ -66,7 +65,7 @@
   font-weight: 500;
   color: var(--dark);
 }
-/* User Card */
+
 .user-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -79,7 +78,7 @@
   align-items: center;
 }
 
-/* Delete Button */
+
 .delete-btn {
   background-color: #ff4d4d;
   color: white;

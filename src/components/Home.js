@@ -81,19 +81,13 @@ const Home = () => {
   const handleCategoryClick = async (categoryid) => {
     try {
       console.log("Category clicked:", categoryid);
-  
-      // Hitting the API to fetch restaurants by category (correct URL usage)
       const response = await axios.get(`http://localhost:5191/api/restaurants/category/${categoryid}`);
       console.log("Category-specific data:", response.data.data);
-  
-      // Navigate to the CategoryPage, passing category data
       navigate(`/category/${categoryid}`, { state: { categoryData: response.data.data } });
-  
     } catch (error) {
       console.error("Error fetching category data:", error);
     }
   };
-  
 
   const handleSearchSubmit = (e) => {
     e.preventDefault(); 
@@ -102,13 +96,9 @@ const Home = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
-
-
   return (
     <div>
       <Navbar />
-
-      {/* ✅ Hero Section with Search Field */}
       <div className="hero-section">
         <div className="overlay">
           <h1>
@@ -127,7 +117,6 @@ const Home = () => {
         </div>
       </div>
 
-{/* Categories Section */}
 <div className="categories-section">
         
         {categoryLoading ? (
@@ -149,7 +138,7 @@ const Home = () => {
                       onError={(e) => {
                         e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(category.name)}&background=random&rounded=true`;
                       }}
-                      style={{ cursor: "pointer" }} // add pointer to show it's clickable
+                      style={{ cursor: "pointer" }} 
                     />
                   </div>
                   <h3>{category.name}</h3>
@@ -161,8 +150,6 @@ const Home = () => {
           </div>
         )}
       </div>
-
-      {/* ✅ Search Results */}
       {searchQuery && (
         <div className="search-results-container">
           <h2>Search Results for "{searchQuery}"</h2>
@@ -225,8 +212,6 @@ const Home = () => {
         </div>
       )}
 
-
-      {/* ✅ Default Restaurants List */}
       {!searchQuery && (
         <div className="restaurants-container">
           {restaurants.length === 0 ? (

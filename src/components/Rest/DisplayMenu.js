@@ -65,28 +65,88 @@ const DisplayMenu = ({ dishes, restaurantId, fetchMenu, onSuccess, onError }) =>
     }
   };
 
-  const handleViewVariants = (dish) => {
-    if (!dish.variants && dish.Variants) {
-      dish.variants = dish.Variants; // fallback if API sends different key
+  const handleViewDish = async (dishId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`http://localhost:5191/api/menu/item/${dishId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+  
+      if (response.data.success) {
+        const dish = response.data.data;
+  
+        if (!dish.variants && dish.Variants) {
+          dish.variants = dish.Variants;
+        }
+  
+        setSelectedDish(dish);
+        setShowPopup(true);
+      } else {
+        onError(response.data.message || "Failed to fetch dish details");
+      }
+    } catch (error) {
+      console.error("Error fetching dish:", error);
+      onError(error.response?.data?.message || "Failed to fetch dish details");
     }
-    setSelectedDish(dish);
-    setShowPopup(true);
   };
+  
 
   const closePopup = () => {
     setShowPopup(false);
     setSelectedDish(null);
   };
 
-  const toggleVariantAvailability = (index) => {
-    const updatedVariants = [...selectedDish.variants];
-    updatedVariants[index].IsAvailable = !updatedVariants[index].IsAvailable;
-    setSelectedDish({ ...selectedDish, variants: updatedVariants });
+  const handleSaveChanges = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.patch("http://localhost:5191/api/menu/", selectedDish, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        }
+      });
+  
+      if (response.data.success) {
+        onSuccess("Dish updated successfully!");
+        fetchMenu(restaurantId);
+        setShowPopup(false);
+        setSelectedDish(null);
+      } else {
+        onError(response.data.message || "Failed to update dish");
+      }
+    } catch (error) {
+      console.error("Error updating dish:", error);
+      onError(error.response?.data?.message || "Failed to update dish");
+    }
   };
-
-  const deleteVariant = (index) => {
-    const updatedVariants = selectedDish.variants.filter((_, i) => i !== index);
-    setSelectedDish({ ...selectedDish, variants: updatedVariants });
+  
+  const handleSaveSingleVariant = async (index) => {
+    try {
+      const token = localStorage.getItem("token");
+  
+      const updatedVariant = selectedDish.variants[index];
+      const payload = {
+        dishId: selectedDish.id,
+        variant: updatedVariant
+      };
+  
+      const response = await axios.patch("http://localhost:5191/api/menu/update-varient", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        }
+      });
+  
+      if (response.data.success) {
+        onSuccess("Variant updated successfully!");
+        fetchMenu(restaurantId);
+      } else {
+        onError(response.data.message || "Failed to update variant");
+      }
+    } catch (error) {
+      console.error("Error updating variant:", error);
+      onError(error.response?.data?.message || "Failed to update variant");
+    }
   };
 
   return (
@@ -112,7 +172,7 @@ const DisplayMenu = ({ dishes, restaurantId, fetchMenu, onSuccess, onError }) =>
 
                     <div className="item-actions">
                       <button
-                        onClick={() => handleViewVariants(dish)}
+                        onClick={() => handleViewDish(dish.id)}
                         className="action-btn view-btn"
                       >
                         View
@@ -144,34 +204,102 @@ const DisplayMenu = ({ dishes, restaurantId, fetchMenu, onSuccess, onError }) =>
         <p className="no-items">No menu items found.</p>
       )}
 
-      {/* Popup Modal */}
       {showPopup && selectedDish && (
-        <div className="popup-overlay">
-          <div className="popup-content">
-            <h2>{selectedDish.name}</h2>
-            <p>{selectedDish.description}</p>
+        <div className="variant-popup-overlay">
+          <div className="variant-popup-content">
+            <h2>Edit Dish</h2>
+            <div className="form-row">
+              <div className="form-group">
+                <label>Name:</label>
+                <input
+                  type="text"
+                  value={selectedDish.name || ""}
+                  onChange={(e) => setSelectedDish({ ...selectedDish, name: e.target.value })}
+                />
+              </div>
 
-            {selectedDish.variants && selectedDish.variants.length > 0 ? (
+              <div className="form-group">
+                <label>Description:</label>
+                <textarea
+                  value={selectedDish.description || ""}
+                  onChange={(e) => setSelectedDish({ ...selectedDish, description: e.target.value })}
+                />
+              </div>
+            </div>
+
+            {selectedDish?.variants && selectedDish.variants.length > 0 && (
               <div className="variants-section">
                 <h3>Variants</h3>
                 {selectedDish.variants.map((variant, index) => (
-                  <div key={index} className="variant-item">
-                    <span>{variant.Size || variant.size} - ₹{variant.Price || variant.price}</span>
-                    <button onClick={() => toggleVariantAvailability(index)}>
-                      {variant.IsAvailable ? "Available" : "Unavailable"}
-                    </button>
-                    <button onClick={() => deleteVariant(index)}>Delete</button>
+                  <div key={index} className="variant-row">
+                    <div className="variant-field">
+                      <label>Size:</label>
+                      <input
+                        type="text"
+                        value={variant.Size || variant.size || ""}
+                        onChange={(e) => {
+                          const updatedVariants = [...selectedDish.variants];
+                          updatedVariants[index].Size = e.target.value;
+                          setSelectedDish({ ...selectedDish, variants: updatedVariants });
+                        }}
+                      />
+                    </div>
+
+                    <div className="variant-field">
+                      <label>Price:</label>
+                      <input
+                        type="number"
+                        value={variant.Price || variant.price || ""}
+                        onChange={(e) => {
+                          const updatedVariants = [...selectedDish.variants];
+                          updatedVariants[index].Price = parseFloat(e.target.value);
+                          setSelectedDish({ ...selectedDish, variants: updatedVariants });
+                        }}
+                      />
+                    </div>
+
+                    <div className="variant-field">
+                          <button
+                            onClick={() => toggleAvailability(index)}
+                            className={`compact-btn ${variant.IsAvailable ? 'available' : 'unavailable'}`}
+                            disabled={loadingItems[selectedDish.id]}
+                          >
+                            {loadingItems[selectedDish.id] ? "Updating..." : variant.IsAvailable ? "Available" : "Unavailable"}
+                          </button>
+                        </div>
+
+                    <div className="variant-actions">
+                      <button
+                        className="compact-btn save-btn"
+                        onClick={() => handleSaveSingleVariant(index)}
+                      >
+                        Save
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
-            ) : (
-              <div className="no-variants">
-                <h3>Price</h3>
-                <p>₹{selectedDish.price}</p>
+            )}
+
+            {(!selectedDish?.variants || selectedDish.variants.length === 0) && (
+              <div className="form-group">
+                <label>Price:</label>
+                <input
+                  type="number"
+                  value={selectedDish.price || ""}
+                  onChange={(e) => setSelectedDish({ ...selectedDish, price: parseFloat(e.target.value) })}
+                />
               </div>
             )}
 
-            <button onClick={closePopup} className="close-btn">Close</button>
+            <div className="button-row">
+              <button className="save-btn" onClick={handleSaveChanges}>
+                Save Dish
+              </button>
+              <button className="close-btn" onClick={closePopup}>
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
