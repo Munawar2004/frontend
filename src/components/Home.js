@@ -79,6 +79,7 @@ const Home = () => {
   };
 
   const handleCategoryClick = async (categoryid) => {
+    console.log("hayyyyyyyyyyyyyyy")
     try {
       console.log("Category clicked:", categoryid);
       const response = await axios.get(`http://localhost:5191/api/restaurants/category/${categoryid}`);
@@ -97,155 +98,201 @@ const Home = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
   return (
-    <div>
-      <Navbar />
-      <div className="hero-section">
-        <div className="overlay">
-          <h1>
-            "Are you starving? <br />
-            Within a few clicks, find meals that are accessible near you"
-          </h1>
-          <form onSubmit={handleSearchSubmit} className="hero-search">
-            <input
-              type="text"
-              placeholder="Search restaurants or dishes..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button type="submit">Search</button>
-          </form>
-        </div>
-      </div>
-
-<div className="categories-section">
-        
-        {categoryLoading ? (
-          <p>Loading categories...</p>
-        ) : (
-          <div className="categories-container">
-            {categories.length > 0 ? (
-              categories.map((category) => (
-                <div key={category.id} className="category-card">
-                 <div className="category-image">
-                 <img
-                      src={
-                        category.photo
-                          ? `http://localhost:5191/uploads/${category.photo}`
-                          : `https://ui-avatars.com/api/?name=${encodeURIComponent(category.name)}&background=random&rounded=true`
-                      }
-                      alt={category.name}
-                      onClick={() => handleCategoryClick(category.id)}
-                      onError={(e) => {
-                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(category.name)}&background=random&rounded=true`;
-                      }}
-                      style={{ cursor: "pointer" }} 
-                    />
-                  </div>
-                  <h3>{category.name}</h3>
-                </div>
-              ))
-            ) : (
-              <p>No categories available</p>
-            )}
-          </div>
-        )}
-      </div>
-      {searchQuery && (
-        <div className="search-results-container">
-          <h2>Search Results for "{searchQuery}"</h2>
-          <div>
-            <h3>Restaurants</h3>
-            {searchResults?.restaurants?.length > 0 ? (
-              searchResults.restaurants.map((restaurant) => (
-                <div key={restaurant.id} className="restaurant-card">
-                  <div className="restaurant-image">
-                    <img
-                      src={restaurant.imageUrl ? `http://localhost:5191/uploads/${restaurant.imageUrl}` : 'https://via.placeholder.com/300x200?text=Restaurant+Image'}
-                      alt={restaurant.restaurantName}
-                      onError={(e) => {
-                        if (e.target.src !== 'https://via.placeholder.com/300x200?text=Restaurant+Image') {
-                          e.target.src = 'https://via.placeholder.com/300x200?text=Restaurant+Image';
-                        }
-                      }}
-                    />
-                  </div>
-                  <div className="restaurant-info">
-                    <h3>{restaurant.restaurantName}</h3>
-                    <p className="food-type">{restaurant.description || "Description Not Available"}</p>
-                    <button
-                      className="view-menu-button"
-                      onClick={() => handleViewMenu(restaurant.id)}
-                    >
-                      View Menu
-                    </button>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No restaurants found.</p>
-            )}
-          </div>
-          <div>
-            <h3>Dishes</h3>
-            {searchResults?.dishes?.length > 0 ? (
-              searchResults.dishes.map((dish) => (
-                <div key={dish.Id} className="dish-card">
-                  <div className="dish-image">
-                    <img
-                      src={dish.image || "default-dish.png"}
-                      alt={dish.dishName}
-                      onError={(e) => (e.target.src = "default-dish.png")}
-                    />
-                  </div>
-                  <div className="dish-info">
-                    <h4>{dish.dishName}</h4>
-                    <p>{dish.description}</p>
-                    <p><strong>Price:</strong> ${dish.price}</p>
-                    <p><strong>Restaurant:</strong> {dish.restaurantName}</p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No dishes found.</p>
-            )}
-          </div>
-        </div>
-      )}
-
-      {!searchQuery && (
-        <div className="restaurants-container">
-          {restaurants.length === 0 ? (
-            <p>No restaurants available</p>
-          ) : (
-            restaurants.map((restaurant) => (
-              <div key={restaurant.id} className="restaurant-card">
-                <div className="restaurant-image">
-                  <img
-                    src={restaurant.imageUrl ? `http://localhost:5191/uploads/${restaurant.imageUrl}` : 'https://via.placeholder.com/300x200?text=Restaurant+Image'}
-                    alt={restaurant.restaurantName}
-                    onError={(e) => {
-                      if (e.target.src !== 'https://via.placeholder.com/300x200?text=Restaurant+Image') {
-                        e.target.src = 'https://via.placeholder.com/300x200?text=Restaurant+Image';
-                      }
-                    }}
-                  />
-                </div>
-                <div className="restaurant-info">
-                  <h3>{restaurant.restaurantName}</h3>
-                  <p className="food-type">{restaurant.description || "Description Not Available"}</p>
-                  <button
-                    className="view-menu-button"
-                    onClick={() =>  handleViewMenu(restaurant.id)}
-                  >
-                    View Menu
-                  </button>
-                </div>
+      <div>
+          <Navbar />
+          <div className="hero-section">
+              <div className="overlay">
+                  <h1>
+                      "Are you starving? <br />
+                      Within a few clicks, find meals that are accessible near
+                      you"
+                  </h1>
+                  <form onSubmit={handleSearchSubmit} className="hero-search">
+                      <input
+                          type="text"
+                          placeholder="Search restaurants or dishes..."
+                          value={searchQuery}
+                          onChange={(e) => setSearchQuery(e.target.value)}
+                      />
+                      <button type="submit">Search</button>
+                  </form>
               </div>
-            ))
+          </div>
+
+          <div className="categories-section">
+              {categoryLoading ? (
+                  <p>Loading categories...</p>
+              ) : (
+                  <div className="categories-container">
+                      {categories.length > 0 ? (
+                          categories.map((category) => (
+                              <div
+                                  key={category.id}
+                                  className="category-card"
+                                  onClick={() =>
+                                      handleCategoryClick(category.id)
+                                  }
+                              >
+                                  <div className="category-image">
+                                      <img
+                                          src={
+                                              category.photo
+                                                  ? `http://localhost:5191/uploads/${category.photo}`
+                                                  : `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                                                        category.name
+                                                    )}&background=random&rounded=true`
+                                          }
+                                          alt={category.name}
+                                          onError={(e) => {
+                                              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+                                                  category.name
+                                              )}&background=random&rounded=true`;
+                                          }}
+                                          style={{ cursor: "pointer" }}
+                                      />
+                                  </div>
+                                  <h3>{category.name}</h3>
+                              </div>
+                          ))
+                      ) : (
+                          <p>No categories available</p>
+                      )}
+                  </div>
+              )}
+          </div>
+          {searchQuery && (
+              <div className="search-results-container">
+                  <h2>Search Results for "{searchQuery}"</h2>
+                  <div>
+                      <h3>Restaurants</h3>
+                      {searchResults?.restaurants?.length > 0 ? (
+                          searchResults.restaurants.map((restaurant) => (
+                              <div
+                                  key={restaurant.id}
+                                  className="restaurant-card"
+                              >
+                                  <div className="restaurant-image">
+                                      <img
+                                          src={
+                                              restaurant.imageUrl
+                                                  ? `http://localhost:5191/uploads/${restaurant.imageUrl}`
+                                                  : "https://via.placeholder.com/300x200?text=Restaurant+Image"
+                                          }
+                                          alt={restaurant.restaurantName}
+                                          onError={(e) => {
+                                              if (
+                                                  e.target.src !==
+                                                  "https://via.placeholder.com/300x200?text=Restaurant+Image"
+                                              ) {
+                                                  e.target.src =
+                                                      "https://via.placeholder.com/300x200?text=Restaurant+Image";
+                                              }
+                                          }}
+                                      />
+                                  </div>
+                                  <div className="restaurant-info">
+                                      <h3>{restaurant.restaurantName}</h3>
+                                      <p className="food-type">
+                                          {restaurant.description ||
+                                              "Description Not Available"}
+                                      </p>
+                                      <button
+                                          className="view-menu-button"
+                                          onClick={() =>
+                                              handleViewMenu(restaurant.id)
+                                          }
+                                      >
+                                          View Menu
+                                      </button>
+                                  </div>
+                              </div>
+                          ))
+                      ) : (
+                          <p>No restaurants found.</p>
+                      )}
+                  </div>
+                  <div>
+                      <h3>Dishes</h3>
+                      {searchResults?.dishes?.length > 0 ? (
+                          searchResults.dishes.map((dish) => (
+                              <div key={dish.Id} className="dish-card">
+                                  <div className="dish-image">
+                                      <img
+                                          src={dish.image || "default-dish.png"}
+                                          alt={dish.dishName}
+                                          onError={(e) =>
+                                              (e.target.src =
+                                                  "default-dish.png")
+                                          }
+                                      />
+                                  </div>
+                                  <div className="dish-info">
+                                      <h4>{dish.dishName}</h4>
+                                      <p>{dish.description}</p>
+                                      <p>
+                                          <strong>Price:</strong> ${dish.price}
+                                      </p>
+                                      <p>
+                                          <strong>Restaurant:</strong>{" "}
+                                          {dish.restaurantName}
+                                      </p>
+                                  </div>
+                              </div>
+                          ))
+                      ) : (
+                          <p>No dishes found.</p>
+                      )}
+                  </div>
+              </div>
           )}
-        </div>
-      )}
-    </div>
+
+          {!searchQuery && (
+              <div className="restaurants-container">
+                  {restaurants.length === 0 ? (
+                      <p>No restaurants available</p>
+                  ) : (
+                      restaurants.map((restaurant) => (
+                          <div key={restaurant.id} className="restaurant-card">
+                              <div className="restaurant-image">
+                                  <img
+                                      src={
+                                          restaurant.imageUrl
+                                              ? `http://localhost:5191/uploads/${restaurant.imageUrl}`
+                                              : "https://via.placeholder.com/300x200?text=Restaurant+Image"
+                                      }
+                                      alt={restaurant.restaurantName}
+                                      onError={(e) => {
+                                          if (
+                                              e.target.src !==
+                                              "https://via.placeholder.com/300x200?text=Restaurant+Image"
+                                          ) {
+                                              e.target.src =
+                                                  "https://via.placeholder.com/300x200?text=Restaurant+Image";
+                                          }
+                                      }}
+                                  />
+                              </div>
+                              <div className="restaurant-info">
+                                  <h3>{restaurant.restaurantName}</h3>
+                                  <p className="food-type">
+                                      {restaurant.description ||
+                                          "Description Not Available"}
+                                  </p>
+                                  <button
+                                      className="view-menu-button"
+                                      onClick={() =>
+                                          handleViewMenu(restaurant.id)
+                                      }
+                                  >
+                                      View Menu
+                                  </button>
+                              </div>
+                          </div>
+                      ))
+                  )}
+              </div>
+          )}
+      </div>
   );
 };
 

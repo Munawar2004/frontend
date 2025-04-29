@@ -110,7 +110,7 @@ const handleOrdersClick = async () => {
     }
 
     try {
-        const response = await fetch("http://localhost:5191/my-orders", {
+        const response = await fetch("http://localhost:5191/api/orders/my-orders", {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`,
