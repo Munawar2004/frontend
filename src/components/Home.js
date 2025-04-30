@@ -128,7 +128,7 @@ const Home = () => {
                           categories.map((category) => (
                               <div
                                   key={category.id}
-                                  className="category-card"
+                                  className="category-cards"
                                   onClick={() =>
                                       handleCategoryClick(category.id)
                                   }

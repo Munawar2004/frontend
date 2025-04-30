@@ -44,6 +44,12 @@ const Orders = () => {
             setLoading(false);
         }
     };
+    useEffect(()=>{
+        (async()=>{
+            await fetchOrders()
+        })()
+
+    },[])
 
     const fetchOrderDetails = async (id) => {
         try {
@@ -60,7 +66,7 @@ const Orders = () => {
         }
     };
 
-    const updateOrderStatus = (orderId, status) => {
+    const updateOrderStatus =  (orderId, status) => {
         const token = localStorage.getItem("token");
         console.log("tokenn----------------", token);
         if (!token) {
@@ -81,15 +87,17 @@ const Orders = () => {
             body: JSON.stringify(data),
         };
 
-        fetch(url, options)
+         fetch(url, options)
             .then((response) => response.json())
             .then((result) => {
-                console.log("Order status updated:", result);
+                alert("Order status updated:", result);
             })
             .catch((error) => {
                 console.error("Error updating order status:", error);
                 // Handle error, like showing an error message
             });
+
+        setSelectedOrder(null);
     };
 
     const viewOrderDetails = async (id) => {
