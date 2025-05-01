@@ -4,7 +4,7 @@ import { FiPlusCircle, FiShoppingCart, FiClock, FiLogOut } from "react-icons/fi"
 import AddMenu from "./AddMenu";
 import Orders from "./Orders";
 import OrderHistory from "./OrderHistory";
-import OrderRequests from "./OrderRequests"; // Import the new component
+import OrderRequests from "./OrderRequests";
 import "./RestaurantDashboard.css";
 
 const RestaurantDashboard = () => {
@@ -18,7 +18,6 @@ const RestaurantDashboard = () => {
 
   return (
     <div className="restaurant-dashboard">
-      {/* Left Sidebar */}
       <div className="sidebar">
         <div className="sidebar-header">
           <h2>Restaurant Dashboard</h2>
@@ -57,7 +56,6 @@ const RestaurantDashboard = () => {
         </nav>
       </div>
 
-      {/* Logout Button */}
       <div className="logout-section">
         <div className="logout-box" onClick={handleLogout}>
           <FiLogOut className="logout-icon" />
@@ -65,7 +63,6 @@ const RestaurantDashboard = () => {
         </div>
       </div>
 
-      {/* Right Content Area */}
       <div className="dashboard-content">
         {activeTab === "addMenu" && <AddMenu />}
         {activeTab === "orderRequests" && <OrderRequests />} {/* Render Order Requests Component */}

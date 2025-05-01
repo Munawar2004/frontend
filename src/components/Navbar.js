@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import "./Navbar.css";
 
 const Navbar = () => {
@@ -125,8 +124,6 @@ const handleOrdersClick = async () => {
 
         const data = await response.json();
         console.log("User orders:", data.data);
-
-        // Navigate to orders page (and pass orders if you want via state)
         navigate("/orders", { state: { orders: data.data } });
     } catch (err) {
         console.error("Fetch orders error:", err.message);
@@ -147,7 +144,6 @@ const handleOrdersClick = async () => {
             navigate("/login");
             return;
         }
-
         setLoading(true);
         setError(null);
 
@@ -229,10 +225,9 @@ const handleOrdersClick = async () => {
         const token = localStorage.getItem("token");
         if (!token) {
             setError("Authentication token not found");
-            navigate("/login");
+            navigate("/");
             return;
         }
-
         setLoading(true);
         setError(null);
 
@@ -260,8 +255,8 @@ const handleOrdersClick = async () => {
             const data = await response.json();
             console.log("Address saved successfully:", data);
             if (savedAddresses.length === 0) {
-                localStorage.setItem("defaultAddressId", data.data._id);
-                setDefaultAddressId(data.data._id);
+                localStorage.setItem("defaultAddressId", data.data.id);
+                setDefaultAddressId(data.data.id);
             }
 
             setAddress({
@@ -289,7 +284,6 @@ const handleOrdersClick = async () => {
         }
 
         setShowAddressForm(true);
-        fetchAddresses();
     };
     return (
         <>

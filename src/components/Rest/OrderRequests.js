@@ -30,13 +30,11 @@ const Orders = () => {
                 setLoading(false);
                 return;
             }
-
-            // Filter only the orders that are "Pending"
             const pendingOrders = response.data.data.filter(
                 (order) => order.status === "Pending"
             );
 
-            setOrderlist(pendingOrders); // Set only the pending orders
+            setOrderlist(pendingOrders); 
             setError(null);
         } catch (err) {
             setError(err.response?.data?.message || "Failed to fetch orders");
@@ -54,43 +52,39 @@ const Orders = () => {
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
-            setSelectedOrder(response.data.data); // Assuming response is the full order object
+            setSelectedOrder(response.data.data); 
         } catch (err) {
             console.error("Failed to fetch order details", err);
         }
     };
 
-    const updateOrderStatus = (orderId, status) => {
+    const updateOrderStatus = async (orderId, status) => {
         const token = localStorage.getItem("token");
-        console.log("tokenn----------------", token);
         if (!token) {
             setError("No authentication token found. Please log in.");
             setLoading(false);
             return;
         }
-        const url = `http://localhost:5191/api/orders/${orderId}`;
-
-        const data = { status };
-
-        const options = {
-            method: "PATCH",
-            headers: {
-                Authorization: `Bearer ${token}`, // Directly set headers without nesting under 'headers'
-                "Content-Type": "application/json", // Make sure to set the Content-Type for the request body
-            },
-            body: JSON.stringify(data),
-        };
-
-        fetch(url, options)
-            .then((response) => response.json())
-            .then((result) => {
-                console.log("Order status updated:", result);
-            })
-            .catch((error) => {
-                console.error("Error updating order status:", error);
-                // Handle error, like showing an error message
+        try {
+            const response = await fetch(`http://localhost:5191/api/orders/${orderId}`, {
+                method: "PATCH",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ status }),
             });
+    
+            const result = await response.json();
+            console.log("Order status updated:", result);
+            setSelectedOrder(null);
+            fetchOrders(); 
+    
+        } catch (error) {
+            console.error("Error updating order status:", error);
+        }
     };
+    
 
     const viewOrderDetails = async (id) => {
         try {
@@ -102,7 +96,7 @@ const Orders = () => {
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
-            setSelectedOrder(response.data); // Assuming response is the full order object
+            setSelectedOrder(response.data); 
         } catch (err) {
             console.error("Failed to fetch order details", err);
         } finally {

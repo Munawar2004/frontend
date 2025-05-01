@@ -4,7 +4,7 @@ const Popup = ({
     showCustomizationPopup,
     setShowCustomizationPopup,
     selectedItemId,
-    addToCart, // ✅ use this from props
+    addToCart, 
 }) => {
     const [variants, setVariants] = useState([]);
     const [selectedVariant, setSelectedVariant] = useState(null);

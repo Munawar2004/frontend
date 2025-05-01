@@ -51,8 +51,8 @@ const Orders = () => {
         const options = {
             method: "PATCH",
             headers: {
-                Authorization: `Bearer ${token}`, // Directly set headers without nesting under 'headers'
-                "Content-Type": "application/json", // Make sure to set the Content-Type for the request body
+                Authorization: `Bearer ${token}`, 
+                "Content-Type": "application/json", 
             },
             body: JSON.stringify(data),
         };
@@ -60,7 +60,7 @@ const Orders = () => {
             .then((response) => response.json())
             .then((result) => {
                 console.log("Order status updated:", result);
-                fetchOrders(); // Refresh list after status update
+                fetchOrders(); 
             })
             .catch((error) => {
                 console.error("Error updating order status:", error);
@@ -100,7 +100,7 @@ const Orders = () => {
                                     <td>{order.paymentMethod}</td>
                                     <td>
                                         <button
-                                            className="accept-btn"
+                                            className="accept-btns"
                                             onClick={() =>
                                                 updateOrderStatus(
                                                     order.id,

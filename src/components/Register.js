@@ -119,10 +119,10 @@ const Register = () => {
         } else if (err.response?.data?.message?.includes("email already exists")) {
           setEmailError("⚠️ Email is already in use. Try another one.");
         } else {
-          setError(err.response.data.message || "❌ Invalid registration data. Please check your input.");
+          setError(err.response.data.message || " Invalid registration data. Please check your input.");
         }
       } else {
-        setError("❌ Registration failed. Please try again later.");
+        setError(" Registration failed. Please try again later.");
       }
     }
   };

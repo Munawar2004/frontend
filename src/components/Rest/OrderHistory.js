@@ -34,8 +34,6 @@ const Orders = () => {
             const data = response.data.data;
 
             const ordersArray = Array.isArray(data) ? data : [data];
-
-            // 🔥 Don't filter for Delivered yet — show everything
             setOrderlist(ordersArray);
             setError(null);
         } catch (err) {
@@ -54,7 +52,7 @@ const Orders = () => {
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
-            setSelectedOrder(response.data.data); // Assuming response is the full order object
+            setSelectedOrder(response.data.data); 
         } catch (err) {
             console.error("Failed to fetch order details", err);
         }

@@ -21,6 +21,7 @@ function RestaurantRegistration() {
   const [landmark, setLandmark] = useState("");
   const [floor, setFloor] = useState("");
   const [shopNumber, setShopNumber] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleImageChange = (e) => {
     setRestaurantImage(e.target.files[0]);
@@ -44,7 +45,7 @@ function RestaurantRegistration() {
       formData.append("ownerPhone", ownerPhone);
       formData.append("restaurantName", restaurantName);
       formData.append("restaurantPhone", restaurantPhone);
-      formData.append("description", "New restaurant registration");
+      formData.append("description", description);
       formData.append("photo", restaurantImage);
       formData.append("validDocument", validDocument);
       formData.append("area", area);
@@ -52,6 +53,7 @@ function RestaurantRegistration() {
       formData.append("landmark", landmark);
       formData.append("floor", floor);
       formData.append("shopNumber", shopNumber);
+
 
       const response = await axios.post("http://localhost:5191/api/restaurants", formData, {
         headers: {
@@ -100,8 +102,8 @@ function RestaurantRegistration() {
                       <label>Food Type</label>
                       <input
                           type="text"
-                          value={foodType}
-                          onChange={(e) => setFoodType(e.target.value)}
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
                           placeholder="e.g., Indian, Chinese"
                           required
                       />
@@ -134,7 +136,7 @@ function RestaurantRegistration() {
                       </label>
                       <input
                           type="file"
-                          accept=".pdf,.doc,.docx"
+                          accept="image/*"
                           onChange={handleDocumentChange}
                           required
                       />

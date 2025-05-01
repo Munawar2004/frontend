@@ -44,7 +44,7 @@ const OrdersPage = () => {
         };
 
         fetchOrders();
-        // console.log("orders",orders)
+        
     }, []);
 
     return (

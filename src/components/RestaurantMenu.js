@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import "./RestaurantMenu.css";
 import Popup from "./Popup.jsx";
@@ -32,6 +32,9 @@ function RestaurantMenu() {
     const [selectedItem, setSelectedItem] = useState(null);
     const [cartitems, setcartitems] = useState([]);
     const { cart, setCart, addToCart, removeFromCart } = useCart();
+    const [searchParams] = useSearchParams();
+    const categoryName = searchParams.get('query');
+    const [sorted,setSorted]=useState([]);
     
     useEffect(() => {
         const fetchRestaurantMenu = async () => {
@@ -39,14 +42,11 @@ function RestaurantMenu() {
                 const response = await axios.get(
                     `http://localhost:5191/api/menu/${id}`
                 );
+                console.log("---------------ttttttttttt",response.data.data);
                 if (
                     response.data.success &&
                     Array.isArray(response.data.data)
-                ) {
-                    setRestaurant({
-                        restaurantName: "Restaurant Menu",
-                        menu: response.data.data,
-                    });
+                ) { 
                     setFilteredMenu(response.data.data);
                 } else {
                     setError("Invalid menu data received");
@@ -63,23 +63,18 @@ function RestaurantMenu() {
     }, [id]);
 
     useEffect(() => {
-        if (restaurant?.menu) {
-            console.log("Current Menu Items:", restaurant.menu);
-            const filtered = restaurant.menu.filter((menuItem) => {
-                const searchLower = searchTerm.toLowerCase();
-                return (
-                    (menuItem?.name?.toLowerCase() || "").includes(
-                        searchLower
-                    ) ||
-                    (menuItem?.category?.toLowerCase() || "").includes(
-                        searchLower
-                    )
-                );
-            });
-            console.log("Filtered Items:", filtered);
-            setFilteredMenu(filtered);
-        }
-    }, [searchTerm, restaurant]);
+        console.log("zzzzzzzzzz", filteredMenu);
+    }, [filteredMenu]);
+    useEffect(() => {
+            console.log("---",categoryName,     sortitem(filteredMenu,categoryName), restaurant?.menu)
+           setSorted(  sortitem(filteredMenu,categoryName))
+    }, [searchTerm,categoryName, restaurant,filteredMenu]);
+    const sortitem = (items, query) => {
+        if (!query) return items;  // ← handle empty query gracefully
+        const queryItems = items.filter(item => item.categoryName === query);
+        const withoutQueryItems = items.filter(item => item.categoryName !== query);
+        return [...queryItems, ...withoutQueryItems];
+    };
 
     useEffect(() => {
         if (selectedCustomizableItem && showCustomizationPopup) {
@@ -89,7 +84,7 @@ function RestaurantMenu() {
                         `/api/menu/${selectedCustomizableItem.id}`
                     );
                     const data = await response.json();
-                    setCustomizationItemDetails(data); // save full item data
+                    setCustomizationItemDetails(data); 
                 } catch (error) {
                     console.error("Error fetching menu item:", error);
                 }
@@ -262,7 +257,6 @@ function RestaurantMenu() {
     }, [cartitems]);
     if (loading) return <div className="loading">Loading...</div>;
     if (error) return <div className="error">{error}</div>;
-    if (!restaurant) return <div className="error">Restaurant not found</div>;
 
    
     const categorizedMenu = {};
@@ -328,7 +322,6 @@ function RestaurantMenu() {
                             </div>
                         )}
                     </div>
-                    <h1>{restaurant.restaurantName}</h1>
                     <div
                         className="cart-icon"
                         onClick={() => setIsCartOpen(!isCartOpen)}
@@ -351,9 +344,9 @@ function RestaurantMenu() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
-
+     
             <div className="menu-categories">
-                {Object.keys(categorizedMenu).map((category) => (
+                {sorted.length>0 && sorted.map((category) => (
                     <div key={category} className="category-section">
                         {showCustomizationPopup && (
                             <Popup
@@ -365,9 +358,9 @@ function RestaurantMenu() {
                                 addToCart={addToCart}
                             />
                         )}
-                        <h2 className="category-title">{category}</h2>
+                        <h2 className="category-title">{category.categoryName.toUpperCase()}</h2>
                         <div className="dishes">
-                            {categorizedMenu[category].map((dish) => {
+                            {category.items.map((dish) => {
                                 const cartItem = cart.find(
                                     (item) => item.id === dish.id
                                 );
@@ -434,7 +427,7 @@ function RestaurantMenu() {
                     </div>
                 ))}
             </div>
-
+/*cart*/
             <div className={`cart-sidebar ${isCartOpen ? "open" : ""}`}>
                 <div className="cart-header">
                     <h2>Your Cart</h2>
@@ -467,7 +460,7 @@ function RestaurantMenu() {
                                         )}
                                         <div className="cart-item-actions">
                                             <span className="cart-item-price">
-                                                ₹{item.price} x {item.quantity}q
+                                                ₹{item.price} 
                                             </span>
                                         </div>
                                     </div>
@@ -498,6 +491,7 @@ function RestaurantMenu() {
                         </div>
 
                         <div className="cart-footer">
+                            <div className="footer-a">
                             <div className="coupon-section">
                                 <input
                                     type="text"
@@ -559,6 +553,8 @@ function RestaurantMenu() {
                                     Online Payment
                                 </label>
                             </div>
+                            </div>
+                            <div className="footer-b">
                             <div className="cart-total">
                                 <span>Total Amount</span>
                                 <span>₹{cartTotal}</span>
@@ -569,6 +565,7 @@ function RestaurantMenu() {
                             >
                                 Proceed to Checkout
                             </button>
+                            </div>
                         </div>
                     </>
                 )}

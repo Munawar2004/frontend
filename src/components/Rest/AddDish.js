@@ -155,7 +155,7 @@ const AddDish = ({ restaurantId, fetchMenu }) => {
     if (newVariant.name && newVariant.price) {
       setVariants(prev => [...prev, newVariant]);
       setNewVariant({ name: '', price: '' });
-      setShowVariantPopup(false);
+      
     }
   };
 
@@ -240,6 +240,7 @@ const AddDish = ({ restaurantId, fetchMenu }) => {
                 required
               />
             </div>
+
               <div className="form-group">
                 <label>
                   <input
@@ -256,7 +257,11 @@ const AddDish = ({ restaurantId, fetchMenu }) => {
                   />
                   Customizable
                 </label>
+                <div className="form-group button-container">
+              <button onClick={handleAddDish} className="add-button">Add Dish</button>
+            </div>
               </div>
+
 
             {customizable && (
               <div className="variants-section">
@@ -279,9 +284,7 @@ const AddDish = ({ restaurantId, fetchMenu }) => {
                 )}
               </div>
             )}
-            <div className="form-group button-container">
-              <button onClick={handleAddDish} className="add-button">Add Dish</button>
-            </div>
+            
           </div>
         </div>
       </div>

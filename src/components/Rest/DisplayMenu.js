@@ -126,8 +126,7 @@ const DisplayMenu = ({ dishes, restaurantId, fetchMenu, onSuccess, onError }) =>
   
       const updatedVariant = selectedDish.variants[index];
       const payload = {
-        dishId: selectedDish.id,
-        variant: updatedVariant
+        ... updatedVariant
       };
   
       const response = await axios.patch("http://localhost:5191/api/menu/update-varient", payload, {
@@ -168,7 +167,9 @@ const DisplayMenu = ({ dishes, restaurantId, fetchMenu, onSuccess, onError }) =>
                   <div className="item-details">
                     <h4>{dish.name}</h4>
                     <p>{dish.description}</p>
+                    {! dish.isCustomizable && 
                     <p className="price">₹{dish.price}</p>
+                      }
 
                     <div className="item-actions">
                       <button

@@ -217,19 +217,14 @@ const PendingRestaurants = () => {
                   <div className="modal-section">
                     <h4>Documents</h4>
                     <div className="documents-view">
-                      {selectedRestaurant.Document?.length > 0 ? (
-                        selectedRestaurant.documents.map((doc, index) => (
-                          <div key={index} className="document-item">
-                            <a 
-                              href={`http://localhost:5191/uploads/${doc}`} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="document-link"
+                      {selectedRestaurant.validDocument ? (
+                     
+                          <div className="restaurant-image ">
+                            <img
+                              src={`http://localhost:5191/uploads/${selectedRestaurant.validDocument}`}  
                             >
-                              View Document {index + 1}
-                            </a>
+                            </img>
                           </div>
-                        ))
                       ) : (
                         <p>No documents available</p>
                       )}

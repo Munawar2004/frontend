@@ -37,7 +37,9 @@ console.log("id",id);
             <p>No restaurants available</p>
           ) : (
             restaurants.map((restaurant) => (
-              <div key={restaurant.id} className="restaurant-card">
+              <div key={restaurant.id} className="restaurant-card"
+              onClick={() => handleViewMenu(restaurant.id)}
+              >
                 <div className="restaurant-image">
                   <img
                     src={
@@ -56,12 +58,11 @@ console.log("id",id);
                 <div className="restaurant-info">
                   <h3>{restaurant.restaurantName}</h3>
                   <p className="food-type">{restaurant.description || "Description Not Available"}</p>
-                  <button
+                  {/* <button
                     className="view-menu-button"
-                    onClick={() => handleViewMenu(restaurant.id)}
-                  >
+                   
                     View Menu
-                  </button>
+                  </button> */}
                 </div>
               </div>
             ))

@@ -32,3 +32,10 @@
   font-size: 18px;
   color: gray;
 }
+.accept-btns{
+background-color: rgb(100, 100, 226);
+color: white;
+padding: 5px 5px ;
+border-radius: 10px;
+z-index: 1000;
+}
