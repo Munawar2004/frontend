@@ -42,6 +42,12 @@ const Orders = () => {
             setLoading(false);
         }
     };
+    useEffect(()=>{
+        (async()=>{
+            await fetchOrders()
+        })()
+
+    },[])
 
     const fetchOrderDetails = async (id) => {
         try {
@@ -58,33 +64,38 @@ const Orders = () => {
         }
     };
 
-    const updateOrderStatus = async (orderId, status) => {
+    const updateOrderStatus =  (orderId, status) => {
         const token = localStorage.getItem("token");
         if (!token) {
             setError("No authentication token found. Please log in.");
             setLoading(false);
             return;
         }
-        try {
-            const response = await fetch(`http://localhost:5191/api/orders/${orderId}`, {
-                method: "PATCH",
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ status }),
+        const url = `http://localhost:5191/api/orders/${orderId}`;
+
+        const data = { status };
+
+        const options = {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${token}`, // Directly set headers without nesting under 'headers'
+                "Content-Type": "application/json", // Make sure to set the Content-Type for the request body
+            },
+            body: JSON.stringify(data),
+        };
+
+         fetch(url, options)
+            .then((response) => response.json())
+            .then((result) => {
+                alert("Order status updated:", result);
+            })
+            .catch((error) => {
+                console.error("Error updating order status:", error);
+                // Handle error, like showing an error message
             });
-    
-            const result = await response.json();
-            console.log("Order status updated:", result);
-            setSelectedOrder(null);
-            fetchOrders(); 
-    
-        } catch (error) {
-            console.error("Error updating order status:", error);
-        }
+
+        setSelectedOrder(null);
     };
-    
 
     const viewOrderDetails = async (id) => {
         try {

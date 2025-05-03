@@ -154,7 +154,6 @@ function RestaurantMenu() {
             let response;
 
             if (paymentMethod === "cod") {
-               
                 response = await axios.post(
                     "http://localhost:5191/api/orders",
                     orderData,
@@ -173,7 +172,6 @@ function RestaurantMenu() {
                     alert("Order placed successfully!");
                 }
             } else {
-                
                 const paymentResponse = await axios.post(
                     "http://localhost:5191/api/payment",
                     orderData,
@@ -249,7 +247,7 @@ function RestaurantMenu() {
     useEffect(() => {
         console.log("Cart updated and saved to localStorage:", cart);
         localStorage.setItem("cart", JSON.stringify(cart));
-        setcartitems(cart); 
+        setcartitems(cart);
     }, [cart]);
 
     useEffect(() => {
@@ -268,7 +266,6 @@ function RestaurantMenu() {
 
     return (
         <div className="restaurant-menu">
-
             <header className="header">
                 <div className="header-content">
                     <div className="menu-container">
@@ -505,10 +502,10 @@ function RestaurantMenu() {
                                     onClick={async () => {
                                         try {
                                             const res = await axios.post(
-                                                "http://localhost:5191/verify",
+                                                "http://localhost:5191/api/coupons/verify",
                                                 {
                                                     code: coupon,
-                                                    cartAmount: 300,
+                                                    cartAmount: originalTotal,
                                                 }
                                             );
                                             if (res.data.success) {
