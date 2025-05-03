@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiPlusCircle, FiShoppingCart, FiClock, FiLogOut } from "react-icons/fi";
+import { FiPlusCircle, FiShoppingCart, FiClock, FiLogOut, FiHome } from "react-icons/fi";
 import AddMenu from "./AddMenu";
 import Orders from "./Orders";
 import OrderHistory from "./OrderHistory";
 import OrderRequests from "./OrderRequests";
+import DashboardSummary from "./DashboardSummary";
 import "./RestaurantDashboard.css";
 
 const RestaurantDashboard = () => {
-  const [activeTab, setActiveTab] = useState("addMenu");
+  const [activeTab, setActiveTab] = useState("dashboardSummary");
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -24,6 +25,13 @@ const RestaurantDashboard = () => {
         </div>
         <nav className="sidebar-nav">
           <ul>
+            <li
+              className={activeTab === "dashboardSummary" ? "active" : ""}
+              onClick={() => setActiveTab("dashboardSummary")}
+            >
+              <FiHome className="nav-icon" />
+              <span>Dashboard </span>
+            </li>
             <li
               className={activeTab === "addMenu" ? "active" : ""}
               onClick={() => setActiveTab("addMenu")}
@@ -64,8 +72,9 @@ const RestaurantDashboard = () => {
       </div>
 
       <div className="dashboard-content">
+        {activeTab === "dashboardSummary" && <DashboardSummary />}
         {activeTab === "addMenu" && <AddMenu />}
-        {activeTab === "orderRequests" && <OrderRequests />} {/* Render Order Requests Component */}
+        {activeTab === "orderRequests" && <OrderRequests />}
         {activeTab === "orders" && <Orders />}
         {activeTab === "orderHistory" && <OrderHistory />}
       </div>

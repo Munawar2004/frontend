@@ -60,7 +60,7 @@
   flex: 1;
   padding: 2rem;
   background-color: #f8fafc;
-  margin-left: 250px; /* Same as sidebar width */
+  margin-left: 85px; /* Same as sidebar width */
   width: calc(100% - 250px); /* Calculate remaining width */
 }
 

@@ -69,7 +69,6 @@ const Home = () => {
       console.log("Full API response:", response);
       console.log("Response data structure:", response.data);
       
-      // Extract data from the nested structure
       const apiData = response.data.data || {};
       
       console.log("Nested restaurants data:", apiData.restaurants);
@@ -218,7 +217,6 @@ const Home = () => {
                     </div>
                     )}
 
-                    {/* No results and view all sections remain the same */}
                     {searchResults.restaurants.length === 0 && 
                     searchResults.dishes.length === 0 && (
                     <div className="no-results">
@@ -245,7 +243,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Rest of your components (categories, restaurants) */}
+
       {(
       <div className="categories-section">
         {categoryLoading ? (

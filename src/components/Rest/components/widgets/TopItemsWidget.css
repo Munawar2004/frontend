@@ -1,0 +1,93 @@
+.widget-container {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.widget-title {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #212121;
+}
+
+.items-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #EEEEEE;
+  transition: background-color 0.2s ease;
+}
+
+.item-row:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.item-row:last-child {
+  border-bottom: none;
+}
+
+.item-info {
+  display: flex;
+  align-items: center;
+}
+
+.item-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  background-color: #EEEEEE;
+  margin-right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #757575;
+  font-weight: bold;
+}
+
+.item-name {
+  font-weight: 500;
+  color: #212121;
+}
+
+.item-category {
+  font-size: 0.8rem;
+  color: #757575;
+}
+
+.item-stats {
+  text-align: right;
+}
+
+.item-count {
+  font-weight: 600;
+  color: #212121;
+}
+
+.item-revenue {
+  font-size: 0.8rem;
+  color: #2E7D32;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 24px;
+  color: #757575;
+}

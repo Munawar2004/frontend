@@ -427,7 +427,9 @@ function RestaurantMenu() {
                     </div>
                 ))}
             </div>
-/*cart*/
+
+                                            /*cart*/
+
             <div className={`cart-sidebar ${isCartOpen ? "open" : ""}`}>
                 <div className="cart-header">
                     <h2>Your Cart</h2>
