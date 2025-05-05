@@ -3,7 +3,7 @@ import './TimeSelector.css';
 
 const TimeSelector = ({ activeTime, onTimeChange }) => {
   const timeOptions = [
-    { id: 'day', label: 'Today' },
+    { id: 'Today', label: 'Today' },
     { id: 'week', label: 'This Week' },
     { id: 'month', label: 'This Month' },
     { id: 'year', label: 'This Year' }
