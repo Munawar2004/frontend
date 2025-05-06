@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiHome, FiCoffee, FiUsers, FiGrid, FiPercent, FiLogOut } from "react-icons/fi";
+import { FiHome, FiCoffee, FiUsers, FiGrid, FiPercent, FiLogOut, FiClock } from "react-icons/fi";
+import AdminSummary from "./Adminsummary";
 import PendingRestaurants from "./PendingRestaurants";
 import VerifiedRestaurants from "./VerifiedRestaurants";
 import UsersPage from "./UsersPage";
@@ -30,6 +31,10 @@ const AdminPanel = () => {
               <FiHome className="nav-icon" />
               <span>Dashboard</span>
             </li>
+            <li className={activeTab === "pending" ? "active" : ""} onClick={() => setActiveTab("pending")}>
+              <FiClock className="nav-icon" />
+              <span>Pending</span>
+            </li>
             <li className={activeTab === "restaurants" ? "active" : ""} onClick={() => setActiveTab("restaurants")}>
               <FiCoffee className="nav-icon" />
               <span>Restaurants</span>
@@ -48,16 +53,18 @@ const AdminPanel = () => {
             </li>
           </ul>
         </nav>
+
         <div className="logout-section">
-  <div className="logout-box" onClick={handleLogout}>
-    <FiLogOut className="logout-icon" />
-    <span>Logout</span>
-  </div>
-</div>
+          <div className="logout-box" onClick={handleLogout}>
+            <FiLogOut className="logout-icon" />
+            <span>Logout</span>
+          </div>
+        </div>
       </div>
 
       <div className="admin-main">
-        {activeTab === "dashboard" && <PendingRestaurants />}
+        {activeTab === "dashboard" && <AdminSummary />}
+        {activeTab === "pending" && <PendingRestaurants />}
         {activeTab === "restaurants" && <VerifiedRestaurants />}
         {activeTab === "categories" && <CategoryPage />}
         {activeTab === "users" && <UsersPage />}

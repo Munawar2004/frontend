@@ -1,0 +1,58 @@
+.time-selector-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  grid-column: span 12;
+  background-color: #FFFFFF;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.date-display {
+  display: flex;
+  flex-direction: column;
+}
+
+.current-date {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #212121;
+}
+
+.date-label {
+  color: #757575;
+  font-size: 0.875rem;
+}
+
+.toggle-group {
+  display: flex;
+  background-color: #F8F9FA;
+  border-radius: 16px;
+  padding: 4px;
+  position: relative;
+}
+
+.toggle-button {
+  background-color: transparent;
+  color: #757575;
+  padding: 4px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.toggle-button:not(:last-child) {
+  margin-right: 4px;
+}
+
+.toggle-button:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.toggle-button.active {
+  background-color: #8A0000;
+  color: white;
+}

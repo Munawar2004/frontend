@@ -3,10 +3,10 @@ import SummaryWidget from "./components/widgets/SummaryWidget";
 import TimeSelector from "./components/common/TimeSelector";
 import ChartWidget from "./components/widgets/ChartWidget";
 import TopItemsWidget from "./components/widgets/TopItemsWidget";
-import "./Dashboard.css";
+import "./Adminsummary.css";
 
-const DashboardSummary = () => {
-    const [timeFrame, setTimeFrame] = useState("Today");
+const Adminsummary = () => {
+    const [timeFrame, setTimeFrame] = useState("");
     const [orderData, setOrderData] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -118,4 +118,4 @@ const DashboardSummary = () => {
     );
 };
 
-export default DashboardSummary;
+export default Adminsummary;
