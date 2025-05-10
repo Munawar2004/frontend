@@ -295,6 +295,11 @@ const Home = () => {
                 key={restaurant.id} 
                 className="restaurant-card"
                 onClick={() => handleViewMenu(restaurant.id)}
+                style={{
+                  filter: restaurant.active === false ? "grayscale(100%)" : "none",
+                  opacity: restaurant.active === false ? 0.6 : 1,
+                  cursor: restaurant.active === false ? "not-allowed" : "pointer",
+                }}
               >
                 <div className="restaurant-image">
                   <img
@@ -313,6 +318,7 @@ const Home = () => {
                           "https://via.placeholder.com/300x200?text=Restaurant+Image";
                       }
                     }}
+                  
                   />
                 </div>
                 <div className="restaurant-info">

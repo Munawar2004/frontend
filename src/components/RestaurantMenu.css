@@ -8,7 +8,7 @@
 }
 
 .header {
-  background-color: #ffffff;
+
   padding: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: sticky;
@@ -795,4 +795,24 @@
     font-weight: bold;
     font-size: 16px;
     color: #e65100;
+}
+.background-section {
+  padding: 40px 20px;
+  min-height: 400px; /* adjust based on design */
+}
+.inactive-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin-top: 400px;
+  height: 100%;
+  background: rgba(128, 128, 128, 0.6); /* semi-transparent gray */
+  z-index: 99998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  pointer-events: none; /* so overlay doesn't block scroll if needed */
 }

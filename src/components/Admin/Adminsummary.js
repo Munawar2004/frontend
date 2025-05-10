@@ -6,7 +6,7 @@ import TopItemsWidget from "./components/widgets/TopItemsWidget";
 import "./Adminsummary.css";
 
 const Adminsummary = () => {
-    const [timeFrame, setTimeFrame] = useState("");
+    const [timeFrame, setTimeFrame] = useState("Today");
     const [orderData, setOrderData] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -34,7 +34,7 @@ const Adminsummary = () => {
 
             try {
                 const response = await fetch(
-                    `http://localhost:5191/api/dashboards/restaurant?statsOf=${timeFrame}`,
+                    `http://localhost:5191/api/dashboards/admin?statsOf=${timeFrame}`,
                     {
                         method: "GET",
                         headers: {
@@ -91,7 +91,7 @@ const Adminsummary = () => {
                 />
                 <SummaryWidget
                     title="Menu Items"
-                    value={orderData.menuItemsCount}
+                    value={orderData.verifiedRestaurnatsCount}
                     change={null}
                     icon="customers"
                     timeFrame={timeFrame}
@@ -109,7 +109,7 @@ const Adminsummary = () => {
                 <div className="table-section">
                     <TopItemsWidget
                         title="Popular Items"
-                        items={orderData.topItems}
+                        items={orderData.topRestaurants}
                         timeFrame={timeFrame}
                     />
                 </div>

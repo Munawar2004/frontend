@@ -22,18 +22,18 @@ const TopItemsWidget = ({ title, items, timeFrame }) => {
                   <div key={index} className="item-row">
                       <div className="item-infos">
                           <div className="item-image">
-                              {item.name.charAt(0)}
+                              {item?.name?.charAt(0)}
                           </div>
                           <div>
-                              <div className="item-name">{item.name}</div>
+                              <div className="item-name">{item?.name}</div>
                               <div className="item-category">
-                                  {item.category_name}
+                                  {item?.category_name}
                               </div>
                           </div>
                       </div>
                       <div className="item-stats">
                           <div className="item-count">
-                              {item.total_orders} orders
+                              {item?.total_orders} orders
                           </div>
                           {/* <div className="item-revenue">
                               ${item.revenue.toLocaleString()}
