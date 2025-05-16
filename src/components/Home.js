@@ -287,6 +287,7 @@ const Home = () => {
       )}
       { (
         <div className="restaurants-container">
+          
           {restaurants.length === 0 ? (
             <p>No restaurants available</p>
           ) : (
@@ -301,6 +302,10 @@ const Home = () => {
                   cursor: restaurant.active === false ? "not-allowed" : "pointer",
                 }}
               >
+                 {!restaurant?.isActive && (
+          <div className="inactive-overlay">
+              </div>
+            )}
                 <div className="restaurant-image">
                   <img
                     src={

@@ -5,6 +5,7 @@ import "./RestaurantMenu.css";
 import Popup from "./Popup.jsx";
 import useCart from "./util/addtocart.js";
 import { Cashfree } from "./cashfree.js";
+import {load} from '@cashfreepayments/cashfree-js';
 
 function RestaurantMenu() {
     const { id } = useParams();
@@ -114,7 +115,50 @@ function RestaurantMenu() {
             addToCart(item);
         }
     };
+const cashfreecheckout = async(sessionId)=>{
 
+      let checkoutOptions = {
+                            paymentSessionId:sessionId 
+                            //  returnUrl:
+                            //      "http://localhost:3000/orders",
+                        };
+      const cashfree= await load({
+mode:"sandbox"
+});
+                      if (cashfree) {
+    cashfree.checkout(checkoutOptions).then(function (result) {
+        console.log("Checkout Result:", result);
+
+        if (result.error) {
+            alert("Error: " + result.error.message);
+            return null;
+        }
+
+        if (result.redirect) {
+            console.log("Redirection:", result.redirect);
+        }
+
+        if (
+            result &&
+            result.transaction &&
+            result.transaction.transactionId
+        ) {
+            const transactionId = result.transaction.transactionId;
+            return result;
+            console.log("Transaction ID:", transactionId);
+
+            // Use transactionId as needed, e.g.:
+            // sendTransactionIdToBackend(transactionId);
+        } else {
+            console.warn("Transaction ID not found in result.");
+        }
+                            });
+                           
+                        } else {
+                            console.error("Cashfree SDK is not loaded on window.");
+                            alert("Payment system is not ready. Please refresh the page and try again.");
+                        }
+}
     const originalTotal = cart.reduce(
         (total, item) => total + item.price * item.quantity,
         0
@@ -202,32 +246,10 @@ function RestaurantMenu() {
                     if (paymentResponse.data && paymentResponse.data.paymentSessionId) {
                         console.log("!!!!!!", paymentResponse.data.paymentSessionId);
                         
-                        const cashfree = window.Cashfree;
-                        console.log("-------",`${window.location.origin}`,cashfree);
                       
-                        let checkoutOptions = {
-                            paymentSessionId: paymentResponse.data.paymentSessionId ,
-                            returnUrl:
-                                "https://test.cashfree.com/pgappsdemos/v3success.php?myorder={order_id}",
-                        };
-                        if (cashfree) {
-                            // Initialize checkout
-                            cashfree.checkout(checkoutOptions).then(function (result) {
-                                if (result.error) {
-                                    alert(result.error.message);
-                                }
-                                if (result.redirect) {
-                                    console.log("Redirection");
-                                }
-                            });
-                           
-                
-                            // Start checkout flow
-                            cashfree.pay();
-                        } else {
-                            console.error("Cashfree SDK is not loaded on window.");
-                            alert("Payment system is not ready. Please refresh the page and try again.");
-                        }
+                      
+                       const result= await cashfreecheckout(paymentResponse.data.paymentSessionId);
+                       console.log("______________________________",result)
                     } else {
                         throw new Error("Failed to get payment session ID");
                     }
@@ -290,15 +312,7 @@ function RestaurantMenu() {
 
     return (
         <div className="restaurant-menu">
-             <div className="background-section"
-             style={{
-                backgroundImage: restaurant
-                    ? `url(http://localhost:5191/uploads/${restaurant.imageUrl})`
-                    : 'none',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-            }}>
+             
             <header className="header">
                 <div className="header-content">
                     <div className="menu-container">
@@ -365,6 +379,40 @@ function RestaurantMenu() {
                     </div>
                 </div>
             </header>
+                   {!restaurant?.isActive && (
+          <div className="inactive-overlay">
+              </div>
+            )}
+            
+            <div className="background-section"
+            
+             style={{
+                backgroundImage: restaurant
+                    ? `url(http://localhost:5191/uploads/${restaurant.imageUrl})`
+                    : 'none',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+            }}>
+                <div className="details">
+  {restaurant && (
+    <>
+      <h1 className="restaurant-name">{restaurant.restaurantName}</h1>
+      <p className="restaurant-description">{restaurant.description}</p>
+      <p className="restaurant-phone"> {restaurant.phone}</p>
+
+      <div className="restaurant-address">
+        <p>
+            {restaurant.owner?.address?.city} | {restaurant.owner?.address?.landmark} | 
+         Shop no: {restaurant.owner?.address?.shopNumber} | Floor: {restaurant.owner?.address?.floor}
+       
+          
+        </p>
+      </div>
+    </>
+  )}
+</div>
+
             <div className="search-bar">
                 <span className="search-icon">🔍</span>
                 <input
@@ -377,11 +425,8 @@ function RestaurantMenu() {
             </div>
      
             <div className="menu-categories">
-            {!restaurant?.isActive && (
-          <div className="inactive-overlay">
-            <p>This restaurant is currently inactive.</p>
-              </div>
-            )}
+             
+           
            
                 {sorted.length>0 && sorted.map((category) => (
                     <div key={category} className="category-section">
@@ -397,6 +442,7 @@ function RestaurantMenu() {
                         )}
                         <h2 className="category-title">{category.categoryName.toUpperCase()}</h2>
                         <div className="dishes">
+                         
                     
                             {category.items.map((dish) => {
                                 const cartItem = cart.find(
@@ -422,40 +468,32 @@ function RestaurantMenu() {
                                                     alt={dish.name}
                                                     className="dish-image"
                                                 />
-                                                {cartItem &&
-                                                !dish.isCustomizable ? (
-                                                    <div className="quantity-controls">
-                                                        <button
-                                                            onClick={() =>
-                                                                removeFromCart(
-                                                                    dish.id,
-                                                                    dish.variantId
-                                                                )
-                                                            }
-                                                        >
-                                                            -
-                                                        </button>
-                                                        <span>
-                                                            {cartItem.quantity}
-                                                        </span>
-                                                        <button
-                                                            onClick={() =>
-                                                                addToCart(dish)
-                                                            }
-                                                        >
-                                                            +
-                                                        </button>
-                                                    </div>
-                                                ) : (
-                                                    <button
-                                                        className="add-button"
-                                                        onClick={() =>
-                                                            handleAddClick(dish)
-                                                        }
-                                                    >
-                                                        ADD
-                                                    </button>
-                                                )}
+                                                 {restaurant?.isActive && (
+                    cartItem && !dish.isCustomizable ? (
+                      <div className="quantity-controls">
+                        <button
+                          onClick={() =>
+                            removeFromCart(dish.id, dish.variantId)
+                          }
+                        >
+                          -
+                        </button>
+                        <span>{cartItem.quantity}</span>
+                        <button
+                          onClick={() => addToCart(dish)}
+                        >
+                          +
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        className="add-button"
+                        onClick={() => handleAddClick(dish)}
+                      >
+                        ADD
+                      </button>
+                    )
+                  )}
                                             </div>
                                         </div>
                                     </div>

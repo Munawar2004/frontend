@@ -91,20 +91,25 @@ const RestaurantDashboard = () => {
               <FiClock className="nav-icon" />
               <span>Order History</span>
             </li>
+            {/* After Order History menu item */}
+<li className="toggle-item">
+  <div className="toggle-container" onClick={handleToggleOpen}>
+    <span className="toggle-label">{isOpen ? "Open" : "Closed"}</span>
+    <label className="switch">
+      <input
+        type="checkbox"
+        checked={isOpen}
+        onChange={handleToggleOpen}
+        onClick={e => e.stopPropagation()} // prevent li click bubbling
+      />
+      <span className="slider" />
+    </label>
+  </div>
+</li>
           </ul>
         </nav>
 
-        {/* Open/Closed Toggle */}
-        <div className="status-toggle">
-          <label>
-            <input
-              type="checkbox"
-              checked={isOpen}
-              onChange={handleToggleOpen}
-            />
-            {isOpen ? "Open" : "Closed"}
-          </label>
-        </div>
+
 
         {/* Logout Button */}
         <div className="logout-section">

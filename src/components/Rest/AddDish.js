@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "./AddMenu.css";
+import "./AddDish.css";
 
 const AddDish = ({ restaurantId, fetchMenu }) => {
   const [dishName, setDishName] = useState("");
