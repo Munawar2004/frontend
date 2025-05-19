@@ -15,6 +15,8 @@ function RestaurantMenu() {
     const [error, setError] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredMenu, setFilteredMenu] = useState([]);
+    
+
 
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,12 +33,12 @@ function RestaurantMenu() {
     const [customizationItemDetails, setCustomizationItemDetails] =
         useState(null);
     const [cartitems, setcartitems] = useState([]);
-    const { cart, setCart, addToCart, removeFromCart } = useCart();
+    const { cart, setCart, addToCart, removeFromCart,reloadCart } = useCart();
     const [searchParams] = useSearchParams();
     const categoryName = searchParams.get('query');
     const [sorted,setSorted]=useState([]);
     
-    
+     const token = localStorage.getItem("token");
     useEffect(() => {
         const fetchRestaurantMenu = async () => {
             try {
@@ -70,7 +72,7 @@ function RestaurantMenu() {
         };
     
         fetchRestaurantMenu();
-    }, [id]);
+    }, [id,reloadCart]);
     
     
 
@@ -289,12 +291,43 @@ mode:"sandbox"
             fetchOrderHistory();
         }
     };
+  
+
 
     useEffect(() => {
         console.log("Cart updated and saved to localStorage:", cart);
         localStorage.setItem("cart", JSON.stringify(cart));
         setcartitems(cart);
     }, [cart]);
+
+useEffect(() => {
+  const fetchCart = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch("http://localhost:5191/api/cart", {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+       setCart(Array.isArray(data.data) ? data.data : []);
+    } catch (err) {
+      console.error("Error fetching cart:", err);
+    }
+  };
+
+  
+    fetchCart();
+  
+}, [isCartOpen,reloadCart]);
+
+
 
     useEffect(() => {
         console.log("Cart items updated from hook:", cartitems);
@@ -425,9 +458,6 @@ mode:"sandbox"
             </div>
      
             <div className="menu-categories">
-             
-           
-           
                 {sorted.length>0 && sorted.map((category) => (
                     <div key={category} className="category-section">
                         {showCustomizationPopup && (
@@ -445,9 +475,11 @@ mode:"sandbox"
                          
                     
                             {category.items.map((dish) => {
-                                const cartItem = cart.find(
-                                    (item) => item.id === dish.id
-                                );
+                                  const cartItem = cart.find(
+  (item) =>
+    item.itemId === dish.id &&
+    (item.variantId === dish.variantId || (!item.variantId && !dish.variantId))
+);
                                 return (
                                     <div key={dish.id} className="dish-card">
                                         <div className="dish-content">
@@ -469,31 +501,25 @@ mode:"sandbox"
                                                     className="dish-image"
                                                 />
                                                  {restaurant?.isActive && (
-                    cartItem && !dish.isCustomizable ? (
-                      <div className="quantity-controls">
-                        <button
-                          onClick={() =>
-                            removeFromCart(dish.id, dish.variantId)
-                          }
-                        >
-                          -
-                        </button>
-                        <span>{cartItem.quantity}</span>
-                        <button
-                          onClick={() => addToCart(dish)}
-                        >
-                          +
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        className="add-button"
-                        onClick={() => handleAddClick(dish)}
-                      >
-                        ADD
-                      </button>
-                    )
-                  )}
+  cartItem && !dish.isCustomizable ? (
+    <div className="quantity-controls">
+      <button onClick={() => removeFromCart(dish.id, dish.variantId)}>
+        -
+      </button>
+      <span>{cartItem.quantity}</span>
+      <button onClick={() => addToCart(dish.id, dish.variantId)}>
+        +
+      </button>
+    </div>
+  ) : (
+    <button
+      className="add-button"
+      onClick={() => handleAddClick(dish.id,dish.variantId)}
+    >
+      ADD
+    </button>
+  )
+)}
                                             </div>
                                         </div>
                                     </div>
@@ -518,7 +544,7 @@ mode:"sandbox"
                 ) : (
                     <>
                         <div className="cart-items">
-                            {cartitems.map((item) => (
+                            {cart.map((item) => (
                                 <div
                                     key={`${item.id}-${
                                         item.variantId || "base"
@@ -530,7 +556,7 @@ mode:"sandbox"
                                         alt={item.name}
                                     />
                                     <div className="cart-item-details">
-                                        <h3>{item.name}</h3>
+                                        <h3>{item.itemName}</h3>
                                         {item.variantName && (
                                             <p className="variant-name">
                                                 Variant: {item.variantName}
@@ -546,7 +572,7 @@ mode:"sandbox"
                                         <button
                                             onClick={() =>
                                                 removeFromCart(
-                                                    item.id,
+                                                    item.itemId,
                                                     item.variantId
                                                 )
                                             }
@@ -556,9 +582,9 @@ mode:"sandbox"
                                         <span>{item.quantity}</span>
                                         <button
                                             onClick={() =>
-                                                addToCart(item, {
-                                                    Id: item.variantId,
-                                                })
+                                                addToCart(item.itemId, 
+                                                     item.variantId,
+                                                )
                                             }
                                         >
                                             +
