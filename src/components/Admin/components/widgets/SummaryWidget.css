@@ -1,0 +1,79 @@
+.summary-widget {
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.summary-widget:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.summary-title {
+  color: #757575;
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-box.orders {
+  background-color: rgba(138, 0, 0, 0.1);
+  color: #8A0000;
+}
+
+.icon-box.revenue {
+  background-color: rgba(46, 125, 50, 0.1);
+  color: #2E7D32;
+}
+
+.icon-box.customers {
+  background-color: rgba(212, 175, 55, 0.1);
+  color: #D4AF37;
+}
+
+.summary-value {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #212121;
+  margin-bottom: 4px;
+}
+
+.change-container {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.change-positive {
+  color: #2E7D32;
+}
+
+.change-negative {
+  color: #D32F2F;
+}
+
+.time-period {
+  font-size: 0.875rem;
+  color: #9E9E9E;
+  margin-left: 4px;
+}

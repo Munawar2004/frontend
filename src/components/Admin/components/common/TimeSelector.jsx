@@ -4,15 +4,9 @@ import './TimeSelector.css';
 const TimeSelector = ({ activeTime, onTimeChange }) => {
   const timeOptions = [
     { id: 'Today', label: 'Today' },
-<<<<<<< HEAD
-    { id: 'week', label: 'This Week' },
-    { id: 'month', label: 'This Month' },
-    { id: 'year', label: 'This Year' }
-=======
     { id: 'Week', label: 'This Week' },
     { id: 'Month', label: 'This Month' },
     { id: 'Year', label: 'This Year' }
->>>>>>> 259c34ccbcc1b4d1f48bc6c9ec6c66a0bbd527b2
   ];
 
   const today = format(new Date(), 'MMMM d, yyyy');

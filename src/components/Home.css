@@ -329,3 +329,7 @@
 .search-loading i {
   margin-right: 8px;
 }
+.inactive-restaurant {
+  filter: grayscale(100%);
+  opacity: 0.6;
+}

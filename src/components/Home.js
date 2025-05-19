@@ -287,6 +287,7 @@ const Home = () => {
       )}
       { (
         <div className="restaurants-container">
+          
           {restaurants.length === 0 ? (
             <p>No restaurants available</p>
           ) : (
@@ -295,7 +296,16 @@ const Home = () => {
                 key={restaurant.id} 
                 className="restaurant-card"
                 onClick={() => handleViewMenu(restaurant.id)}
+                style={{
+                  filter: restaurant.active === false ? "grayscale(100%)" : "none",
+                  opacity: restaurant.active === false ? 0.6 : 1,
+                  cursor: restaurant.active === false ? "not-allowed" : "pointer",
+                }}
               >
+                 {!restaurant?.isActive && (
+          <div className="inactive-overlay">
+              </div>
+            )}
                 <div className="restaurant-image">
                   <img
                     src={
@@ -313,6 +323,7 @@ const Home = () => {
                           "https://via.placeholder.com/300x200?text=Restaurant+Image";
                       }
                     }}
+                  
                   />
                 </div>
                 <div className="restaurant-info">

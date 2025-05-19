@@ -187,13 +187,18 @@ const DisplayMenu = ({ dishes, restaurantId, fetchMenu, onSuccess, onError }) =>
                         {loadingItems[dish.id] ? "Deleting..." : "Delete"}
                       </button>
 
-                      <button
-                        onClick={() => toggleAvailability(dish.id, dish.isAvailable)}
-                        className={`action-btn ${dish.isAvailable ? 'available-btn' : 'unavailable-btn'}`}
-                        disabled={loadingItems[dish.id]}
-                      >
-                        {loadingItems[dish.id] ? "Updating..." : dish.isAvailable ? "Available" : "Unavailable"}
-                      </button>
+                     <label className="toggle-switch">
+                    <input
+                      type="checkbox"
+                      checked={dish.isAvailable}
+                      onChange={() => toggleAvailability(dish.id, dish.isAvailable)}
+                      disabled={loadingItems[dish.id]}
+                    />
+                    <span className="slider" />
+                    <span className="switch-label">
+                      {loadingItems[dish.id] ? "Updating..." : dish.isAvailable ? "Available" : "Unavailable"}
+                    </span>
+                  </label>
                     </div>
                   </div>
                 </div>
@@ -209,7 +214,7 @@ const DisplayMenu = ({ dishes, restaurantId, fetchMenu, onSuccess, onError }) =>
         <div className="variant-popup-overlay">
           <div className="variant-popup-content">
             <h2>Edit Dish</h2>
-            <div className="form-row">
+            <div className="fform-row">
               <div className="form-group">
                 <label>Name:</label>
                 <input
@@ -220,8 +225,9 @@ const DisplayMenu = ({ dishes, restaurantId, fetchMenu, onSuccess, onError }) =>
               </div>
 
               <div className="form-group">
+                
                 <label>Description:</label>
-                <textarea
+                <textarea 
                   value={selectedDish.description || ""}
                   onChange={(e) => setSelectedDish({ ...selectedDish, description: e.target.value })}
                 />
@@ -260,18 +266,20 @@ const DisplayMenu = ({ dishes, restaurantId, fetchMenu, onSuccess, onError }) =>
                     </div>
 
                     <div className="variant-field">
-                          <button
-                            onClick={() => toggleAvailability(index)}
-                            className={`compact-btn ${variant.IsAvailable ? 'available' : 'unavailable'}`}
-                            disabled={loadingItems[selectedDish.id]}
-                          >
-                            {loadingItems[selectedDish.id] ? "Updating..." : variant.IsAvailable ? "Available" : "Unavailable"}
-                          </button>
-                        </div>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={variant.IsAvailable}
+                        onChange={() => toggleAvailability(index)}
+                        disabled={loadingItems[selectedDish.id]}
+                      />
+                      {loadingItems[selectedDish.id] ? "Updating..." : "Available"}
+                    </label>
+                  </div>
 
                     <div className="variant-actions">
                       <button
-                        className="compact-btn save-btn"
+                        className=" save-btn"
                         onClick={() => handleSaveSingleVariant(index)}
                       >
                         Save
@@ -295,7 +303,7 @@ const DisplayMenu = ({ dishes, restaurantId, fetchMenu, onSuccess, onError }) =>
 
             <div className="button-row">
               <button className="save-btn" onClick={handleSaveChanges}>
-                Save Dish
+                Save 
               </button>
               <button className="close-btn" onClick={closePopup}>
                 Close

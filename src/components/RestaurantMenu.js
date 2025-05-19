@@ -4,6 +4,8 @@ import axios from "axios";
 import "./RestaurantMenu.css";
 import Popup from "./Popup.jsx";
 import useCart from "./util/addtocart.js";
+import { Cashfree } from "./cashfree.js";
+import {load} from '@cashfreepayments/cashfree-js';
 
 function RestaurantMenu() {
     const { id } = useParams();
@@ -24,17 +26,16 @@ function RestaurantMenu() {
     const [showCustomizationPopup, setShowCustomizationPopup] = useState(false);
     const [selectedCustomizableItem, setSelectedCustomizableItem] =
         useState(true);
-    const [selectedVariant, setSelectedVariant] = useState(null);
     const [selectedItemId, setSelectedItemId] = useState("");
     const [showVariantPopup, setShowVariantPopup] = useState(false);
     const [customizationItemDetails, setCustomizationItemDetails] =
         useState(null);
-    const [selectedItem, setSelectedItem] = useState(null);
     const [cartitems, setcartitems] = useState([]);
     const { cart, setCart, addToCart, removeFromCart } = useCart();
     const [searchParams] = useSearchParams();
     const categoryName = searchParams.get('query');
     const [sorted,setSorted]=useState([]);
+    
     
     useEffect(() => {
         const fetchRestaurantMenu = async () => {
@@ -42,25 +43,36 @@ function RestaurantMenu() {
                 const response = await axios.get(
                     `http://localhost:5191/api/menu/${id}`
                 );
-                console.log("---------------ttttttttttt",response.data.data);
-                if (
-                    response.data.success &&
-                    Array.isArray(response.data.data)
-                ) { 
+                console.log("Menu data:", response.data.data);
+    
+                const restresponse = await axios.get(
+                    `http://localhost:5191/api/restaurants/${id}`
+                );
+                console.log("Restaurant data:", restresponse.data.data);
+    
+                // Set restaurant if fetched successfully
+                if (restresponse.data.success && restresponse.data.data) {
+                    setRestaurant(restresponse.data.data);
+                }
+    
+                // Set menu if fetched successfully
+                if (response.data.success && Array.isArray(response.data.data)) {
                     setFilteredMenu(response.data.data);
                 } else {
                     setError("Invalid menu data received");
                 }
             } catch (err) {
-                console.error("Error fetching menu:", err);
+                console.error("Error fetching menu or restaurant:", err);
                 setError("Failed to fetch restaurant menu");
             } finally {
                 setLoading(false);
             }
         };
-
+    
         fetchRestaurantMenu();
     }, [id]);
+    
+    
 
     useEffect(() => {
         console.log("zzzzzzzzzz", filteredMenu);
@@ -103,7 +115,50 @@ function RestaurantMenu() {
             addToCart(item);
         }
     };
+const cashfreecheckout = async(sessionId)=>{
 
+      let checkoutOptions = {
+                            paymentSessionId:sessionId 
+                            //  returnUrl:
+                            //      "http://localhost:3000/orders",
+                        };
+      const cashfree= await load({
+mode:"sandbox"
+});
+                      if (cashfree) {
+    cashfree.checkout(checkoutOptions).then(function (result) {
+        console.log("Checkout Result:", result);
+
+        if (result.error) {
+            alert("Error: " + result.error.message);
+            return null;
+        }
+
+        if (result.redirect) {
+            console.log("Redirection:", result.redirect);
+        }
+
+        if (
+            result &&
+            result.transaction &&
+            result.transaction.transactionId
+        ) {
+            const transactionId = result.transaction.transactionId;
+            return result;
+            console.log("Transaction ID:", transactionId);
+
+            // Use transactionId as needed, e.g.:
+            // sendTransactionIdToBackend(transactionId);
+        } else {
+            console.warn("Transaction ID not found in result.");
+        }
+                            });
+                           
+                        } else {
+                            console.error("Cashfree SDK is not loaded on window.");
+                            alert("Payment system is not ready. Please refresh the page and try again.");
+                        }
+}
     const originalTotal = cart.reduce(
         (total, item) => total + item.price * item.quantity,
         0
@@ -123,22 +178,22 @@ function RestaurantMenu() {
                 alert("Please log in to place an order");
                 return;
             }
-
+    
             if (cart.length === 0) {
                 alert("Your cart is empty");
                 return;
             }
-
+    
             const defaultAddress = localStorage.getItem("defaultAddressId");
             if (!defaultAddress) {
                 alert("Please set a default address before checkout");
                 return;
             }
-
+    
             const orderData = {
                 restaurantId: id,
                 addressId: defaultAddress,
-                paymentMethod: "cod",
+                paymentMethod: paymentMethod, // Use the selected payment method
                 paymentTransactionId: paymentMethod === "cod" ? "" : null,
                 orderItems: cart.map((item) => ({
                     itemId: item.id,
@@ -146,15 +201,14 @@ function RestaurantMenu() {
                     quantity: item.quantity,
                 })),
             };
-
+    
             console.log("Order Data Sent:", orderData);
-
+    
             localStorage.setItem("pendingOrder", JSON.stringify(orderData));
-
-            let response;
-
+    
             if (paymentMethod === "cod") {
-                response = await axios.post(
+                // Handle COD payment
+                const response = await axios.post(
                     "http://localhost:5191/api/orders",
                     orderData,
                     {
@@ -164,7 +218,7 @@ function RestaurantMenu() {
                         },
                     }
                 );
-
+    
                 if (response.data) {
                     setCart([]);
                     setIsCartOpen(false);
@@ -172,28 +226,15 @@ function RestaurantMenu() {
                     alert("Order placed successfully!");
                 }
             } else {
-                const paymentResponse = await axios.post(
-                    "http://localhost:5191/api/payment",
-                    orderData,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "application/json",
+                // Handle online payment
+                try {
+                    // Step 1: Get payment session ID from your API
+                    const paymentResponse = await axios.post(
+                        "http://localhost:5191/api/payment",
+                        {
+                            amount: discountedTotal,
+                            orderId: `order_${Date.now()}`,
                         },
-                    }
-                );
-
-                if (paymentResponse.data && paymentResponse.data.success) {
-                    const transactionId = paymentResponse.data.transactionId;
-
-                    const finalOrderData = {
-                        ...orderData,
-                        paymentTransactionId: transactionId,
-                    };
-
-                    const orderResponse = await axios.post(
-                        "http://localhost:5191/api/orders",
-                        finalOrderData,
                         {
                             headers: {
                                 Authorization: `Bearer ${token}`,
@@ -201,17 +242,22 @@ function RestaurantMenu() {
                             },
                         }
                     );
-
-                    if (orderResponse.data) {
-                        setCart([]);
-                        setIsCartOpen(false);
-                        localStorage.removeItem("pendingOrder");
-                        localStorage.removeItem("paymentResponse");
-                        alert("Order placed successfully!");
+                
+                    if (paymentResponse.data && paymentResponse.data.paymentSessionId) {
+                        console.log("!!!!!!", paymentResponse.data.paymentSessionId);
+                        
+                      
+                      
+                       const result= await cashfreecheckout(paymentResponse.data.paymentSessionId);
+                       console.log("______________________________",result)
+                    } else {
+                        throw new Error("Failed to get payment session ID");
                     }
-                } else {
-                    alert("Payment failed or was not successful");
+                } catch (error) {
+                    console.error("Error during payment processing:", error);
+                    alert(error.response?.data?.message || "Payment processing failed");
                 }
+                
             }
         } catch (error) {
             console.error("Error during checkout:", error);
@@ -266,6 +312,7 @@ function RestaurantMenu() {
 
     return (
         <div className="restaurant-menu">
+             
             <header className="header">
                 <div className="header-content">
                     <div className="menu-container">
@@ -332,6 +379,40 @@ function RestaurantMenu() {
                     </div>
                 </div>
             </header>
+                   {!restaurant?.isActive && (
+          <div className="inactive-overlay">
+              </div>
+            )}
+            
+            <div className="background-section"
+            
+             style={{
+                backgroundImage: restaurant
+                    ? `url(http://localhost:5191/uploads/${restaurant.imageUrl})`
+                    : 'none',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+            }}>
+                <div className="details">
+  {restaurant && (
+    <>
+      <h1 className="restaurant-name">{restaurant.restaurantName}</h1>
+      <p className="restaurant-description">{restaurant.description}</p>
+      <p className="restaurant-phone"> {restaurant.phone}</p>
+
+      <div className="restaurant-address">
+        <p>
+            {restaurant.owner?.address?.city} | {restaurant.owner?.address?.landmark} | 
+         Shop no: {restaurant.owner?.address?.shopNumber} | Floor: {restaurant.owner?.address?.floor}
+       
+          
+        </p>
+      </div>
+    </>
+  )}
+</div>
+
             <div className="search-bar">
                 <span className="search-icon">🔍</span>
                 <input
@@ -341,8 +422,12 @@ function RestaurantMenu() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
             </div>
+            </div>
      
             <div className="menu-categories">
+             
+           
+           
                 {sorted.length>0 && sorted.map((category) => (
                     <div key={category} className="category-section">
                         {showCustomizationPopup && (
@@ -357,6 +442,8 @@ function RestaurantMenu() {
                         )}
                         <h2 className="category-title">{category.categoryName.toUpperCase()}</h2>
                         <div className="dishes">
+                         
+                    
                             {category.items.map((dish) => {
                                 const cartItem = cart.find(
                                     (item) => item.id === dish.id
@@ -381,40 +468,32 @@ function RestaurantMenu() {
                                                     alt={dish.name}
                                                     className="dish-image"
                                                 />
-                                                {cartItem &&
-                                                !dish.isCustomizable ? (
-                                                    <div className="quantity-controls">
-                                                        <button
-                                                            onClick={() =>
-                                                                removeFromCart(
-                                                                    dish.id,
-                                                                    dish.variantId
-                                                                )
-                                                            }
-                                                        >
-                                                            -
-                                                        </button>
-                                                        <span>
-                                                            {cartItem.quantity}
-                                                        </span>
-                                                        <button
-                                                            onClick={() =>
-                                                                addToCart(dish)
-                                                            }
-                                                        >
-                                                            +
-                                                        </button>
-                                                    </div>
-                                                ) : (
-                                                    <button
-                                                        className="add-button"
-                                                        onClick={() =>
-                                                            handleAddClick(dish)
-                                                        }
-                                                    >
-                                                        ADD
-                                                    </button>
-                                                )}
+                                                 {restaurant?.isActive && (
+                    cartItem && !dish.isCustomizable ? (
+                      <div className="quantity-controls">
+                        <button
+                          onClick={() =>
+                            removeFromCart(dish.id, dish.variantId)
+                          }
+                        >
+                          -
+                        </button>
+                        <span>{cartItem.quantity}</span>
+                        <button
+                          onClick={() => addToCart(dish)}
+                        >
+                          +
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        className="add-button"
+                        onClick={() => handleAddClick(dish)}
+                      >
+                        ADD
+                      </button>
+                    )
+                  )}
                                             </div>
                                         </div>
                                     </div>
@@ -425,7 +504,7 @@ function RestaurantMenu() {
                 ))}
             </div>
 
-                                            /*cart*/
+                                          
 
             <div className={`cart-sidebar ${isCartOpen ? "open" : ""}`}>
                 <div className="cart-header">

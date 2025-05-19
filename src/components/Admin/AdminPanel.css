@@ -41,6 +41,7 @@ body {
   flex-direction: column;
   box-shadow: var(--shadow);
   z-index: 10;
+  position: relative;
 }
 
 .sidebar-header {

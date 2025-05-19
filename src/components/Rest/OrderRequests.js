@@ -177,6 +177,7 @@ const Orders = () => {
                                 <h3>Order Details</h3>
 
                                 <section className="modal-section">
+                                    
                                     <h4>User Details</h4>
                                     <p>
                                         <strong>Name:</strong>{" "}
@@ -275,7 +276,7 @@ const Orders = () => {
                                     )}
                                     <button
                                         onClick={() => setSelectedOrder(null)}
-                                        className="close-btn"
+                                        className="closee-btn"
                                     >
                                         Close
                                     </button>

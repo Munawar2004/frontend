@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiPlusCircle, FiShoppingCart, FiClock, FiLogOut, FiHome } from "react-icons/fi";
+import {
+  FiPlusCircle,
+  FiShoppingCart,
+  FiClock,
+  FiLogOut,
+  FiHome,
+} from "react-icons/fi";
 import AddMenu from "./AddMenu";
 import Orders from "./Orders";
 import OrderHistory from "./OrderHistory";
@@ -10,11 +16,36 @@ import "./RestaurantDashboard.css";
 
 const RestaurantDashboard = () => {
   const [activeTab, setActiveTab] = useState("dashboardSummary");
+  const [isOpen, setIsOpen] = useState(true); // restaurant open/closed state
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
+  };
+
+  const handleToggleOpen = async () => {
+    const newStatus = !isOpen;
+    setIsOpen(newStatus);
+
+    try {
+      const response = await fetch("http://localhost:5191/api/restaurants/toggle-orders", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ isOpen: newStatus }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update status");
+      }
+
+      console.log("Status updated successfully");
+    } catch (error) {
+      console.error("Error updating status:", error);
+    }
   };
 
   return (
@@ -30,7 +61,7 @@ const RestaurantDashboard = () => {
               onClick={() => setActiveTab("dashboardSummary")}
             >
               <FiHome className="nav-icon" />
-              <span>Dashboard </span>
+              <span>Dashboard</span>
             </li>
             <li
               className={activeTab === "addMenu" ? "active" : ""}
@@ -60,14 +91,32 @@ const RestaurantDashboard = () => {
               <FiClock className="nav-icon" />
               <span>Order History</span>
             </li>
+            {/* After Order History menu item */}
+<li className="toggle-item">
+  <div className="toggle-container" onClick={handleToggleOpen}>
+    <span className="toggle-label">{isOpen ? "Open" : "Closed"}</span>
+    <label className="switch">
+      <input
+        type="checkbox"
+        checked={isOpen}
+        onChange={handleToggleOpen}
+        onClick={e => e.stopPropagation()} // prevent li click bubbling
+      />
+      <span className="slider" />
+    </label>
+  </div>
+</li>
           </ul>
         </nav>
-      </div>
 
-      <div className="logout-section">
-        <div className="logout-box" onClick={handleLogout}>
-          <FiLogOut className="logout-icon" />
-          <span>Logout</span>
+
+
+        {/* Logout Button */}
+        <div className="logout-section">
+          <div className="logout-box" onClick={handleLogout}>
+            <FiLogOut className="logout-icon" />
+            <span>Logout</span>
+          </div>
         </div>
       </div>
 

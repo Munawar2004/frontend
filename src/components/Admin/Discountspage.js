@@ -93,6 +93,7 @@ const DiscountPage = () => {
   }, []);
 
   return (
+    <div className="dis">
     <div className="discount-container">
       <h2 className="discount-title">Create Discount</h2>
       <form onSubmit={handleSubmit} className="discount-form">
@@ -152,7 +153,7 @@ const DiscountPage = () => {
           Create Discount
         </button>
       </form>
-
+</div>
       <div className="discount-list">
         <h3 className="discount-list-title">Available Discounts</h3>
         {discounts.length > 0 ? (
